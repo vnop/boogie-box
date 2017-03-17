@@ -1,6 +1,7 @@
 var app = require('./app');
+var portFile = require('./portFile');
 
-var port = 8080;
+var port = portFile.port;
 
 app.listen(port, function() {
   console.log('We got the boogie on port', port);
