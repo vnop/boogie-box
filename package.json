@@ -5,8 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server/server.js",
-    "compile": "babel ./client --out-dir client/compiled --presets=es2015,react --ignore=node_modules,compiled --source-maps inline -w"
+    "start": "nodemon server/server.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +20,9 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
+    "grunt": "^1.0.1",
+    "grunt-nodemon": "^0.4.2",
+    "grunt-shell": "^2.1.0",
     "morgan": "^1.8.1",
     "path": "^0.12.7",
     "react": "^15.4.2",
