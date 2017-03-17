@@ -1,0 +1,26 @@
+{
+  "name": "boogie-box",
+  "version": "1.0.0",
+  "description": "A jukebox-like app",
+  "main": "server/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/remote-control-pigeon/boogie-box.git"
+  },
+  "author": "FASM",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/remote-control-pigeon/boogie-box/issues"
+  },
+  "homepage": "https://github.com/remote-control-pigeon/boogie-box#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "morgan": "^1.8.1",
+    "path": "^0.12.7"
+  }
+}
