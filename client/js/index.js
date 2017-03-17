@@ -1,0 +1,1 @@
+ReactDOM.render(<App message={'world'} />, document.getElementById('app'));
