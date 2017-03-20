@@ -20,8 +20,8 @@ class Video extends React.Component {
   render() {
     return (
       <div>
-        <h1>Hello {this.props.message}</h1>
-        <ReactPlayer ref="player" url="https://soundcloud.com/crystal-castles/vanished" playing controls onDuration={this.setDuration.bind(this)}/>
+        <h1>Boogie Time</h1>
+        <ReactPlayer ref="player" url="https://www.youtube.com/watch?v=PZbkF-15ObM" playing controls onDuration={this.setDuration.bind(this)}/>
         <button onClick={() => this.refs.player.seekTo(.5)}>Halfway</button>
       </div>
     );
@@ -29,21 +29,60 @@ class Video extends React.Component {
 };
 
 class Add extends React.Component {
-//takes in a url to add to queue
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <form onSubmit={function(){return false}}>
+        <label>
+          Video URL:
+          <input type="text" url="name" />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+    )
+  }
 };
 
 class Queue extends React.Component {
-//manages urls added
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <p>This is the Queue</p>
+    )
+  }
 };
 
 class QueueElement extends React.Component {
-//handles upvote/downvote, queue manipulation
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <p>This is the QueueElement</p>
+    )
+  }
 };
 
 class Chat extends React.Component {
-//handles chats
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <p>This is the chat</p>
+    )
+  }
 };
 
+var appData = {};//data sharing, mostly for tests
 //AVAIL CLASSES TO WINDOW
 window.Video = Video;
 window.Add = Add;
