@@ -31,14 +31,38 @@ class Video extends React.Component {
 class Add extends React.Component {
   constructor(props) {
     super(props);
+    this.setState({
+      error: '';
+    });
+  }
+
+  urlSubmit(event) {
+    event.preventDefault();
+    var inputVal = this.refs.addUrlField.value;
+    if (this.validYoutubeUrl(inputVal)) {
+      console.log(inputVal);
+      this.refs.addUrlField.style = 'outline: 0px';
+      appData.currentURL = inputVal;
+    } else {
+      console.log('Not a valid youtube link');
+      this.refs.addUrlField.style = 'outline: 1px solid red';
+    }
+    this.refs.addUrlField.value = '';
+  }
+
+  validYoutubeUrl(url) {
+    var url1 = 'youtube.com';
+    var url2 = 'youtu.be';
+
+    return url.indexOf(url1) !== -1 || url.indexOf(url2) !== -1;
   }
 
   render() {
     return (
-      <form onSubmit={function(){return false}}>
+      <form onSubmit={this.urlSubmit.bind(this)}>
         <label>
           Video URL:
-          <input type="text" url="name" />
+          <input type="text" ref="addUrlField"/>
         </label>
         <input type="submit" value="Submit" />
       </form>
