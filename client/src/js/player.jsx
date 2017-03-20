@@ -1,10 +1,6 @@
-//add dep
-//react
-//react-dom
 
-// import ReactPlayer from 'react-player'
-
-class App extends React.Component {
+//CLASSES
+class Video extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -30,6 +26,27 @@ class App extends React.Component {
       </div>
     );
   }
-}
+};
 
-window.App = App;
+class Add extends React.Component {
+//takes in a url to add to queue
+};
+
+class Queue extends React.Component {
+//manages urls added
+};
+
+class QueueElement extends React.Component {
+//handles upvote/downvote, queue manipulation
+};
+
+class Chat extends React.Component {
+//handles chats
+};
+
+//AVAIL CLASSES TO WINDOW
+window.Video = Video;
+window.Add = Add;
+window.Queue = Queue;
+window.QueueElement = QueueElement;
+window.Chat = Chat;
