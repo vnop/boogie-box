@@ -1,4 +1,3 @@
 node_modules/
 server/portFile.js
 client/compiled/
-client/lib
