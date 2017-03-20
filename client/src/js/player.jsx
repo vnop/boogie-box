@@ -31,22 +31,28 @@ class Video extends React.Component {
 class Add extends React.Component {
   constructor(props) {
     super(props);
-    this.setState({
-      error: '';
-    });
+    this.state = {
+      error: ''
+    };
   }
 
   urlSubmit(event) {
     event.preventDefault();
     var inputVal = this.refs.addUrlField.value;
     if (this.validYoutubeUrl(inputVal)) {
-      console.log(inputVal);
-      this.refs.addUrlField.style = 'outline: 0px';
-      appData.currentURL = inputVal;
+      this.refs.addUrlField.style = 'outline: initial';
+      this.setState({
+        error: ''
+      });
+      appData.currentUrl = inputVal;
     } else {
       console.log('Not a valid youtube link');
       this.refs.addUrlField.style = 'outline: 1px solid red';
+      this.setState({
+        error: 'Please input a valid Youtube URL'
+      });
     }
+    console.log('currentUrl', appData.currentUrl);
     this.refs.addUrlField.value = '';
   }
 
@@ -59,13 +65,16 @@ class Add extends React.Component {
 
   render() {
     return (
-      <form onSubmit={this.urlSubmit.bind(this)}>
-        <label>
-          Video URL:
-          <input type="text" ref="addUrlField"/>
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
+      <div>
+        <form onSubmit={this.urlSubmit.bind(this)}>
+          <label>
+            Video URL:
+            <input type="text" ref="addUrlField"/>
+          </label>
+          <input type="submit" value="Submit" />
+        </form>
+        {this.state.error}
+      </div>
     )
   }
 };
