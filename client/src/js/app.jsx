@@ -22,7 +22,6 @@ class App extends React.Component {
         </div>
 
         <div className="row">
-
           <div className="col-md-7">
             <div className="row">
               <Video socket={this.props.socket} adminFlag={this.props.adminFlag}/>
