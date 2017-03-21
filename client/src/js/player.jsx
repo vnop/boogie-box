@@ -49,7 +49,6 @@ class Video extends React.Component {
   render() {
     return (
       <div>
-        <h1>Boogie Time</h1>
         <div id='audio'>
           <ReactPlayer
             ref={player => { this.player = player } }
@@ -63,19 +62,30 @@ class Video extends React.Component {
             onDuration={duration => this.setState({ duration }) } //logs the overall video duration
             onProgress={progress => this.setState({ progress: progress.played }) } //logs current time as decimal between 0 and 1
           />
-          <div id='visuals'>
-            <input type='range' min={0} max={1}
-              step='any' value={this.state.progress}/>
-            <button id='toggleVideo' onClick={this.toggleVideo.bind(this)}>{this.state.hideVid ? 'Show Video' : 'Hide Video'}</button>
-          </div>
-          <div id='volume'>
-            <input type='range' min={0} max={1} step='any'
-              value={this.state.volume}
-              onChange={this.setVolume.bind(this)} />
-          </div>
-          <div id='controls'>
-            <button onClick={this.playPause.bind(this)}>{this.state.playing ? 'Pause' : 'Play'}</button>
-            <button onClick={this.stop.bind(this)}>Stop</button>
+          <div className='container'>
+
+            <div className='row' id='visuals'>
+              <div className='col-sm-4'>
+                <input id='trackingBar' type='range' min={0} max={1}
+                  step='any' value={this.state.progress}/>
+              </div>
+              <div className='col-sm-4'>
+                <button id='toggleVideo' onClick={this.toggleVideo.bind(this)}>{this.state.hideVid ? 'Show Video' : 'Hide Video'}</button>
+              </div>
+            </div>
+
+            <div className='row' id='audioCtrl'>
+              <div className='col-sm-2'>
+                <input id='volumeCtrl' type='range' min={0} max={1} step='any'
+                  value={this.state.volume}
+                  onChange={this.setVolume.bind(this)} />
+              </div>
+              <div className='col-sm-2'>
+                <button id='playPauseBtn' onClick={this.playPause.bind(this)}>{this.state.playing ? 'Pause' : 'Play'}</button>
+                <button id='stopBtn' onClick={this.stop.bind(this)}>Stop</button>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -306,7 +316,7 @@ class Chat extends React.Component {
 
 //appData for sharing between, mostly for tests before our database hook up
 var appData = {
-  currentUrl: 'https://www.youtube.com/watch?v=9RHFFeQ2tu4',
+  currentUrl: 'https://www.youtube.com/watch?v=fGn-aeBMQR0',
   currentTime: 0
 };
 
