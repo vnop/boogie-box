@@ -101,6 +101,7 @@ class Add extends React.Component {
         error: ''
       });
       appData.currentUrl = inputVal;
+      this.refs.addUrlField.value = '';
     } else {
       console.log('Not a valid youtube link');
       this.refs.addUrlField.style = 'outline: 1px solid red';
@@ -109,7 +110,6 @@ class Add extends React.Component {
       });
     }
     console.log('currentUrl', appData.currentUrl);
-    this.refs.addUrlField.value = '';
   }
 
   validYoutubeUrl(url) {
@@ -253,15 +253,53 @@ class Queue extends React.Component {
   }
 };
 
-//CHAT CONTROLLER
-class Chat extends React.Component {
+class ChatMessage extends React.Component {
   constructor(props) {
     super(props);
   }
 
   render() {
+
     return (
-      <p>This is the chat</p>
+      <div className="chatMessage">
+        <span className="chatMessageUser"> {this.props.message.user}: </span>
+        <span className="chatMessageText"> {this.props.message.text} </span>
+      </div>
+    );
+  }
+
+}
+
+//CHAT CONTROLLER
+class Chat extends React.Component {
+  constructor(props) {
+    super(props);
+
+    var dummyData = [
+      {id: 0, user: 'Phteven', text: 'This is a message!'},
+      {id: 1, user: 'Barabus', text: 'This song sucks'},
+      {id: 2, user: 'Phteven', text: 'That\'s not very nice barabus'},
+      {id: 3, user: 'Gertrude', text: 'Has anyone really been far as decided to use even go want to do look more like?'},
+      {id: 4, user: 'Satan Himself', text: 'Yes'},
+      {id: 5, user: 'Karylon the Deceiver', text: 'Your existence is a mistake'}
+    ];
+
+    this.state = {
+      messages: dummyData
+    }
+  }
+
+  render() {
+    var chats = [];
+    _.each(this.state.messages, function(message) {
+      chats.push(<ChatMessage message={message} key={message.id}/>);
+    })
+
+
+    return (
+      <div className="chatBox">
+        {chats}
+      </div>
     )
   }
 };
