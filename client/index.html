@@ -3,14 +3,44 @@
 <head>
   <title>App</title>
 
-  <!-- <script src="../node_modules/react/dist/react.js"></script>
-  <script src="../node_modules/react-dom/dist/react-dom.js"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+  <script src="bower_components/react-player/dist/ReactPlayer.js"></script>
+
 </head>
 <body>
   <div id="app"></div>
 
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+  <!-- <script>
+    var socket = io('http://localhost:8080');
+    var adminFlag = false;
+    var count = 0;
+
+    socket.on('recTime', function (data) {
+      console.log('set time', data.time);
+      //count = data.time;
+    });
+
+    setInterval(function () {
+      if (adminFlag) {
+        socket.emit('setTime', {time: count});
+      }
+    }, 2000);
+
+    setInterval(function () {
+      count++;
+    }, 1000);
+
+    socket.on('setAdminFlag', function (data) {
+      console.log('adminFlag set to: ', data);
+      adminFlag = true;
+    });
+  </script> -->
+
+  <script src="compiled/js/player.js"></script>
   <script src="compiled/js/app.js"></script>
   <script src="compiled/js/index.js"></script>
 </body>
