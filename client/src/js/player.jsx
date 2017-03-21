@@ -1,4 +1,3 @@
-
 //CLASSES
 //The Video class controlls the player, possibly changing name to "Audio" to be more accurate
 class Video extends React.Component {
@@ -14,8 +13,24 @@ class Video extends React.Component {
       loaded: 0,
       duration: 0,
       progress: 0,
-      playbackRate: 1.0
+      serverTime: 0,
+      playbackRate: 1.0,
+      adminFlag: this.props.adminFlag
     };
+
+    this.props.socket.on('recTime', function (data) {
+      console.log(`data --> ${JSON.stringify(data)}`);
+      this.setState({
+        serverTime: data.time
+      });
+    }.bind(this));
+
+    this.props.socket.on('setAdminFlag', function (data) {
+      console.log('adminFlag set to: ', data);
+      this.setState({
+        adminFlag: true
+      })
+    }.bind(this));
   }
 
   //Audio Controllers
@@ -39,11 +54,17 @@ class Video extends React.Component {
   verifySync(time) {
     this.setState({ progress: time.played });
     var clientTime = Math.floor(this.state.progress*this.state.duration);
-    var serverTime = Math.floor(appData.currentTime*this.state.duration);
-    if (Math.abs(clientTime - serverTime) >= 4) {
-      this.player.seekTo(appData.currentTime);
+    var serverTime = Math.floor(this.state.serverTime*this.state.duration);
+    if (Math.abs(clientTime - serverTime) >= 4 && !this.state.adminFlag) {
+      this.player.seekTo(this.state.serverTime);
+      this.setState({
+        progress: this.state.serverTime
+      });
     }
-    //appData.currentTime = .2;
+    if (this.state.adminFlag) {
+      console.log(`this.state.progress ${this.state.progress}`);
+      this.props.socket.emit('setTime', {time: this.state.progress});
+    }
   }
 
   render() {
