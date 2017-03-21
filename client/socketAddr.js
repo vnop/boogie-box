@@ -1,0 +1,1 @@
+window.socketAddr = 'http://localhost:8081';
