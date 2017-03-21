@@ -37,13 +37,13 @@ class Video extends React.Component {
   }
 
   verifySync(time) {
-    var seconds = Math.floor(time.progress*this.state.duration);
-    this.setState({ progress: seconds })
-    // console.log(this.state.progress, appData.currentTime); //To check my expected outputs
-    if (this.state.progress < appData.currentTime-2) {
-      //seek to the correct time
+    this.setState({ progress: time.played });
+    var clientTime = Math.floor(this.state.progress*this.state.duration);
+    var serverTime = Math.floor(appData.currentTime*this.state.duration);
+    if (Math.abs(clientTime - serverTime) >= 4) {
+      this.player.seekTo(appData.currentTime);
     }
-    appData.currentTime = time.progress;
+    //appData.currentTime = .2;
   }
 
   render() {
@@ -60,7 +60,7 @@ class Video extends React.Component {
             onPause={() => this.setState({ playing: false}) }
             onEnded={() => this.setState({ playing: false}) }
             onDuration={duration => this.setState({ duration }) } //logs the overall video duration
-            onProgress={progress => this.setState({ progress: progress.played }) } //logs current time as decimal between 0 and 1
+            onProgress={this.verifySync.bind(this)}
           />
           <div className='container'>
 
@@ -290,7 +290,7 @@ class Chat extends React.Component {
       {id: 1, user: 'Barabus', text: 'This song sucks'},
       {id: 2, user: 'Phteven', text: 'That\'s not very nice barabus'},
       {id: 3, user: 'Gertrude', text: 'Has anyone really been far as decided to use even go want to do look more like?'},
-      {id: 4, user: 'Satan Himself', text: 'Yes'},
+      {id: 4, user: 'Kevin Bacon Himself', text: 'Yes'},
       {id: 5, user: 'Karylon the Deceiver', text: 'Your existence is a mistake'}
     ];
 
@@ -316,7 +316,7 @@ class Chat extends React.Component {
 
 //appData for sharing between, mostly for tests before our database hook up
 var appData = {
-  currentUrl: 'https://www.youtube.com/watch?v=fGn-aeBMQR0',
+  currentUrl: 'https://www.youtube.com/watch?v=aeL9gagV_VA',
   currentTime: 0
 };
 
