@@ -55,13 +55,13 @@ class Video extends React.Component {
             ref={player => { this.player = player } }
             url={this.state.url}
             hidden={this.state.hideVid} //hides the video frame by default; can be toggled
-            playing={this.state.playing} //automatically starts playback
+            playing={this.state.playing} //controls playback
             volume={this.state.volume}
             onPlay={() => this.setState({ playing: true }) }
             onPause={() => this.setState({ playing: false}) }
             onEnded={() => this.setState({ playing: false}) }
-            onDuration={duration => this.setState({ duration }) } //logs the current duration
-            onProgress={progress => this.setState({ progress: progress.played }) }
+            onDuration={duration => this.setState({ duration }) } //logs the overall video duration
+            onProgress={progress => this.setState({ progress: progress.played }) } //logs current time as decimal between 0 and 1
           />
           <div id='visuals'>
             <input type='range' min={0} max={1}
@@ -268,7 +268,8 @@ class Chat extends React.Component {
 
 //appData for sharing between, mostly for tests before our database hook up
 var appData = {
-  currentUrl: 'https://www.youtube.com/watch?v=9RHFFeQ2tu4'
+  currentUrl: 'https://www.youtube.com/watch?v=9RHFFeQ2tu4',
+  currentTime: 0
 };
 
 //AVAIL CLASSES TO WINDOW
