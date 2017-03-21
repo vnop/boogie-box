@@ -36,10 +36,14 @@ class Video extends React.Component {
     this.setState({ hideVid: !this.state.hideVid });
   }
 
-  verifySync(playbackTimes) {
-    // server time
-    // if too different
-    // this.refs.player.seekTo(serverTime);
+  verifySync(time) {
+    var seconds = Math.floor(time.progress*this.state.duration);
+    this.setState({ progress: seconds })
+    // console.log(this.state.progress, appData.currentTime); //To check my expected outputs
+    if (this.state.progress < appData.currentTime-2) {
+      //seek to the correct time
+    }
+    appData.currentTime = time.progress;
   }
 
   render() {
