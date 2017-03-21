@@ -1,14 +1,39 @@
 
 //CLASSES
+//The Video class controlls the player, possibly changing name to "Audio" to be more accurate
 class Video extends React.Component {
   constructor(props) {
     super(props);
+    //default audio states
+    this.state = {
+      url: appData.currentUrl,
+      hideVid: false,
+      playing: true,
+      volume: 1,
+      played: 0,
+      loaded: 0,
+      duration: 0,
+      progress: 0,
+      playbackRate: 1.0
+    };
   }
 
-  setDuration(duration) {
-    this.setState({
-      duration: duration
-    });
+  //Audio Controllers
+  stop() {
+    this.setState({ url: null, playing: false });
+  }
+  playPause() {
+    if (this.state.url) {
+      this.setState({ playing: !this.state.playing });
+    } else {
+      this.setState({ url: appData.currentUrl, playing: true });
+    }
+  }
+  setVolume(vol) {
+    this.setState({ volume: parseFloat(vol.target.value) });
+  }
+  toggleVideo() {
+    this.setState({ hideVid: !this.state.hideVid });
   }
 
   verifySync(playbackTimes) {
@@ -21,13 +46,40 @@ class Video extends React.Component {
     return (
       <div>
         <h1>Boogie Time</h1>
-        <ReactPlayer ref="player" url="https://www.youtube.com/watch?v=PZbkF-15ObM" playing controls onDuration={this.setDuration.bind(this)}/>
-        <button onClick={() => this.refs.player.seekTo(.5)}>Halfway</button>
+        <div id='audio'>
+          <ReactPlayer
+            ref={player => { this.player = player } }
+            url={this.state.url}
+            hidden={this.state.hideVid} //hides the video frame by default; can be toggled
+            playing={this.state.playing} //automatically starts playback
+            volume={this.state.volume}
+            onPlay={() => this.setState({ playing: true }) }
+            onPause={() => this.setState({ playing: false}) }
+            onEnded={() => this.setState({ playing: false}) }
+            onDuration={duration => this.setState({ duration }) } //logs the current duration
+            onProgress={progress => this.setState({ progress: progress.played }) }
+          />
+          <div id='visuals'>
+            <input type='range' min={0} max={1}
+              step='any' value={this.state.progress}/>
+            <button id='toggleVideo' onClick={this.toggleVideo.bind(this)}>{this.state.hideVid ? 'Show Video' : 'Hide Video'}</button>
+          </div>
+          <div id='volume'>
+            <input type='range' min={0} max={1} step='any'
+              value={this.state.volume}
+              onChange={this.setVolume.bind(this)} />
+          </div>
+          <div id='controls'>
+            <button onClick={this.playPause.bind(this)}>{this.state.playing ? 'Pause' : 'Play'}</button>
+            <button onClick={this.stop.bind(this)}>Stop</button>
+          </div>
+        </div>
       </div>
     );
   }
 };
 
+//Component for adding new URLs
 class Add extends React.Component {
   constructor(props) {
     super(props);
@@ -197,7 +249,7 @@ class Queue extends React.Component {
   }
 };
 
-
+//CHAT CONTROLLER
 class Chat extends React.Component {
   constructor(props) {
     super(props);
@@ -210,7 +262,11 @@ class Chat extends React.Component {
   }
 };
 
-var appData = {};//data sharing, mostly for tests
+//appData for sharing between, mostly for tests before our database hook up
+var appData = {
+  currentUrl: 'https://www.youtube.com/watch?v=9RHFFeQ2tu4'
+};
+
 //AVAIL CLASSES TO WINDOW
 window.Video = Video;
 window.Add = Add;
