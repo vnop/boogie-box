@@ -344,7 +344,7 @@ class Chat extends React.Component {
 
 //appData for sharing between, mostly for tests before our database hook up
 var appData = {
-  currentUrl: 'https://www.youtube.com/watch?v=vSkb0kDacjs',
+  currentUrl: 'https://www.youtube.com/watch?v=wbl3P4pP0K4',
   currentTime: 0
 };
 

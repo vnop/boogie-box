@@ -12,11 +12,19 @@ class App extends React.Component {
         </div>
         <Add/>
         <div className="row">
+
           <div className="col-md-7">
             <Video socket={this.props.socket} adminFlag={this.props.adminFlag}/>
           </div>
+
           <div className="col-md-5">
-            <Chat/>
+            <div className="panel panel-info">
+              <div className="panel-heading" id="chatTitle">Boogie-Chat</div>
+              <div className="panel-body" id="allChats">
+                <Chat/>
+              </div>
+            </div>
+
           </div>
         </div>
 
