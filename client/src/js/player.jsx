@@ -90,28 +90,37 @@ class Video extends React.Component {
               onProgress={this.verifySync.bind(this)}
             />
           </div>
+
           <div className='col-sm-1'>
-            <button data-toggle='tooltip' title='Toggle video' className='btn btn-sm' onClick={this.toggleVideo.bind(this)}><span className={this.state.hideVid ? 'glyphicon glyphicon-eye-open' : 'glyphicon glyphicon-eye-close'}></span></button>
+            <button id='hideVidBtn' data-toggle='tooltip' title='Toggle video' onClick={this.toggleVideo.bind(this)}><span className={this.state.hideVid ? 'glyphicon glyphicon-eye-close' : 'glyphicon glyphicon-eye-open'}></span></button>
           </div>
         </div>
 
-        <div className='row'>
+        <div id='allCtrls' className='row'>
           <div id='videoCtrl' className='col-md-2'>
-            <button className='btn btn-sm btn-success' onClick={this.playPause.bind(this)}><span className={this.state.playing ? 'glyphicon glyphicon-pause' : 'glyphicon glyphicon-play'}></span></button>
-            <button className='btn btn-sm btn-danger' onClick={this.stop.bind(this)}><span className='glyphicon glyphicon-stop'></span></button>
+            <button className='btn btn-sm btn-default' onClick={this.playPause.bind(this)}><span className={this.state.playing ? 'glyphicon glyphicon-pause' : 'glyphicon glyphicon-play'}></span></button>
+            <button className='btn btn-sm btn-default' onClick={this.stop.bind(this)}><span className='glyphicon glyphicon-stop'></span></button>
           </div>
 
-          <div className='col-md-7'>
+          <div className='col-md-6'>
             <div id='progBar'className='progress'>
               <div className='progress-bar progress-bar-striped active'
                 role='progressbar' style={{width: (this.state.progress*100)+'%'}}>
-                <center>{Math.floor(this.state.progress*this.state.duration)}</center>
+              </div>
+              <div id='dispCurTime'>
+                {Math.floor((this.state.duration*this.state.progress)/60)+':'+Math.floor(((this.state.duration*this.state.progress)-Math.floor((this.state.duration*this.state.progress)/60)*60))}
               </div>
             </div>
           </div>
 
+          <div className='col-sm-1'>
+            <div id='dispDuration'>
+            { Math.floor(this.state.duration/60)+':'+(this.state.duration-Math.floor(this.state.duration/60)*60) }
+            </div>
+          </div>
+
           <div className='col-md-1'>
-            <button id='muteBtn' className={this.state.muted ? 'btn btn-sm btn-danger' : 'btn btn-sm btn-success'} onClick={this.mute.bind(this)}>
+            <button id='muteBtn' onClick={this.mute.bind(this)}>
               <span className={this.state.muted ? 'glyphicon glyphicon-volume-off' : ((this.state.volume<0.5) ? 'glyphicon glyphicon-volume-down' : 'glyphicon glyphicon-volume-up' ) }></span>
             </button>
           </div>

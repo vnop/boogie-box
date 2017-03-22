@@ -38,9 +38,9 @@ class App extends React.Component {
           </div>
 
           <div className="col-md-5">
-            <div className="panel panel-info">
-              <div className="panel-heading" id="chatTitle">Boogie-Chat</div>
-              <div className="panel-body" id="allChats">
+            <div id='chatPan' className="panel panel-info">
+              <div id="chatTitle" className="panel-heading">Boogie-Chat</div>
+              <div className="panel-body">
                 <Chat/>
               </div>
             </div>

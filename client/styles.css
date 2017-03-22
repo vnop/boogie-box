@@ -4,11 +4,28 @@ body {
   background-blend-mode: screen;
 }
 
+#hideVidBtn {
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+#progBar {
+  width: 330px;
+}
+
+#volumeCtrl {
+  width: 75px;
+}
+
 #chatTitle {
   font-weight: bold;
   text-align: center;
 }
 
-#allChats > .chatBox > .chatMessage > .chatMessageUser {
+#chatPan {
+  max-width: 750px;
+}
+
+.chatBox > .chatMessage > .chatMessageUser {
   font-weight: bold;
 }
