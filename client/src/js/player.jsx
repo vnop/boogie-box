@@ -97,12 +97,12 @@ class Video extends React.Component {
         </div>
 
         <div id='allCtrls' className='row'>
-          <div id='videoCtrl' className='col-md-2'>
+          <div id='videoCtrl' className='col-xs-2'>
             <button className='btn btn-sm btn-default' onClick={this.playPause.bind(this)}><span className={this.state.playing ? 'glyphicon glyphicon-pause' : 'glyphicon glyphicon-play'}></span></button>
             <button className='btn btn-sm btn-default' onClick={this.stop.bind(this)}><span className='glyphicon glyphicon-stop'></span></button>
           </div>
 
-          <div className='col-md-6'>
+          <div className='col-xs-6'>
             <div id='progBar'className='progress'>
               <div className='progress-bar progress-bar-striped active'
                 role='progressbar' style={{width: (this.state.progress*100)+'%'}}>
@@ -113,19 +113,19 @@ class Video extends React.Component {
             </div>
           </div>
 
-          <div className='col-sm-1'>
+          <div className='col-xs-1'>
             <div id='dispDuration'>
             { Math.floor(this.state.duration/60)+':'+(this.state.duration-Math.floor(this.state.duration/60)*60) }
             </div>
           </div>
 
-          <div className='col-md-1'>
+          <div className='col-xs-1'>
             <button id='muteBtn' onClick={this.mute.bind(this)}>
               <span className={this.state.muted ? 'glyphicon glyphicon-volume-off' : ((this.state.volume<0.5) ? 'glyphicon glyphicon-volume-down' : 'glyphicon glyphicon-volume-up' ) }></span>
             </button>
           </div>
 
-          <div className='col-md-2'>
+          <div className='col-xs-2'>
             <input id='volumeCtrl' type='range' min={0} max={1} step='any'
               value={this.state.muted ? 0 : this.state.volume}
               onChange={this.setVolume.bind(this)} />
