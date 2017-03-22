@@ -6,7 +6,7 @@ class App extends React.Component {
   render() {
     return (
       <div id="app" className="container">
-        <div className="jumbostron text-center">
+        <div className="jumbostron text-center" id="titleText">
           <h1>Boogie-Box</h1>
           <p>it's boogie time</p>
         </div>
