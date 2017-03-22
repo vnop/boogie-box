@@ -6,15 +6,35 @@ class App extends React.Component {
   render() {
     return (
       <div id="app" className="container">
-        <div className="jumbostron text-center" id="titleText">
-          <h1>Boogie-Box</h1>
-          <p>it's boogie time</p>
-        </div>
-        <Add/>
         <div className="row">
+          <div className="col-md-12">
+            <div className="jumbostron text-center" id="titleText">
+              <h1>Boogie-Box</h1>
+              <p>it's boogie time</p>
+            </div>
+          </div>
+        </div>
 
+        <div className="row">
+          <div className="col-md-12">
+            <Add/>
+          </div>
+        </div>
+
+        <div className="row">
           <div className="col-md-7">
-            <Video socket={this.props.socket} adminFlag={this.props.adminFlag}/>
+            <div className="row">
+              <Video socket={this.props.socket} adminFlag={this.props.adminFlag}/>
+            </div>
+
+            <div className="row">
+              <div className="panel panel-default">
+                <div className="heading">Queue</div>
+                <div className="panel-body">
+                  <Queue/>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="col-md-5">
@@ -27,8 +47,6 @@ class App extends React.Component {
 
           </div>
         </div>
-
-        <Queue/>
       </div>
     )
   }

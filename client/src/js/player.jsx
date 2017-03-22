@@ -73,52 +73,53 @@ class Video extends React.Component {
 
   render() {
     return (
-      <div>
-        <div id='audio'>
-          <ReactPlayer
-            ref={player => { this.player = player } }
-            url={this.state.url}
-            hidden={this.state.hideVid} //hides the video frame by default; can be toggled
-            playing={this.state.playing} //controls playback
-            //volume={this.state.volume}
-            volume={this.state.muted ? 0 : this.state.volume}
-            onPlay={() => this.setState({ playing: true }) }
-            onPause={() => this.setState({ playing: false}) }
-            onEnded={() => this.setState({ playing: false, progress: 0}) }
-            onDuration={duration => this.setState({ duration }) } //logs the overall video duration
-            onProgress={this.verifySync.bind(this)}
-          />
-          <div className='container'>
+      <div className='container-fluid'>
+        <div className='row'>
+          <div className='col-md-11'>
+            <ReactPlayer
+              ref={player => { this.player = player } }
+              url={this.state.url}
+              hidden={this.state.hideVid} //hides the video frame by default; can be toggled
+              playing={this.state.playing} //controls playback
+              //volume={this.state.volume}
+              volume={this.state.muted ? 0 : this.state.volume}
+              onPlay={() => this.setState({ playing: true }) }
+              onPause={() => this.setState({ playing: false}) }
+              onEnded={() => this.setState({ playing: false, progress: 0}) }
+              onDuration={duration => this.setState({ duration }) } //logs the overall video duration
+              onProgress={this.verifySync.bind(this)}
+            />
+          </div>
+          <div className='col-sm-1'>
+            <button data-toggle='tooltip' title='Toggle video' className='btn btn-sm' onClick={this.toggleVideo.bind(this)}><span className={this.state.hideVid ? 'glyphicon glyphicon-eye-open' : 'glyphicon glyphicon-eye-close'}></span></button>
+          </div>
+        </div>
 
-            <div className='row' id='visuals'>
-              <div className='col-sm-5'>
-                 <div className="progress">
-                  <div className="progress-bar progress-bar-striped active"
-                    role="progressbar" style={{width: (this.state.progress*100)+'%'}}>
-                    <center>{Math.floor(this.state.progress*this.state.duration)}</center>
-                  </div>
-                </div>
-              </div>
-              <div className='col-sm-3'>
-                <button className='btn btn-md btn-success' onClick={this.playPause.bind(this)}><span className={this.state.playing ? 'glyphicon glyphicon-pause' : 'glyphicon glyphicon-play'}></span></button>
-                <button className='btn btn-md btn-danger' onClick={this.stop.bind(this)}><span className='glyphicon glyphicon-stop'></span></button>
-                <button data-toggle='tooltip' title='Toggle video' className='btn btn-sm' onClick={this.toggleVideo.bind(this)}><span className={this.state.hideVid ? 'glyphicon glyphicon-eye-open' : 'glyphicon glyphicon-eye-close'}></span></button>
+        <div className='row'>
+          <div id='videoCtrl' className='col-md-2'>
+            <button className='btn btn-sm btn-success' onClick={this.playPause.bind(this)}><span className={this.state.playing ? 'glyphicon glyphicon-pause' : 'glyphicon glyphicon-play'}></span></button>
+            <button className='btn btn-sm btn-danger' onClick={this.stop.bind(this)}><span className='glyphicon glyphicon-stop'></span></button>
+          </div>
+
+          <div className='col-md-7'>
+            <div id='progBar'className='progress'>
+              <div className='progress-bar progress-bar-striped active'
+                role='progressbar' style={{width: (this.state.progress*100)+'%'}}>
+                <center>{Math.floor(this.state.progress*this.state.duration)}</center>
               </div>
             </div>
+          </div>
 
-            <div className='row' id='audioCtrl'>
-              <div className='col-sm-1'>
-                <button className={this.state.muted ? 'btn btn-sm btn-danger' : 'btn btn-sm btn-success'} onClick={this.mute.bind(this)}>
-                  <span className={this.state.muted ? 'glyphicon glyphicon-volume-off' : ((this.state.volume<0.5) ? 'glyphicon glyphicon-volume-down' : 'glyphicon glyphicon-volume-up' ) }></span>
-                </button>
-              </div>
-              <div className='col-sm-2'>
-                <input id='volumeCtrl' type='range' min={0} max={1} step='any'
-                  value={this.state.muted ? 0 : this.state.volume}
-                  onChange={this.setVolume.bind(this)} />
-              </div>
-            </div>
+          <div className='col-md-1'>
+            <button id='muteBtn' className={this.state.muted ? 'btn btn-sm btn-danger' : 'btn btn-sm btn-success'} onClick={this.mute.bind(this)}>
+              <span className={this.state.muted ? 'glyphicon glyphicon-volume-off' : ((this.state.volume<0.5) ? 'glyphicon glyphicon-volume-down' : 'glyphicon glyphicon-volume-up' ) }></span>
+            </button>
+          </div>
 
+          <div className='col-md-2'>
+            <input id='volumeCtrl' type='range' min={0} max={1} step='any'
+              value={this.state.muted ? 0 : this.state.volume}
+              onChange={this.setVolume.bind(this)} />
           </div>
         </div>
       </div>
