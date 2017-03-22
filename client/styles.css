@@ -1,0 +1,14 @@
+body {
+  background: url('https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-168544.jpg')grey no-repeat fixed;
+  background-size: cover;
+  background-blend-mode: screen;
+}
+
+#chatTitle {
+  font-weight: bold;
+  text-align: center;
+}
+
+#allChats > .chatBox > .chatMessage > .chatMessageUser {
+  font-weight: bold;
+}

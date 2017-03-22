@@ -1,5 +1,5 @@
 //CLASSES
-//The Video class controlls the player, possibly changing name to "Audio" to be more accurate
+//The Video class controlls the player
 class Video extends React.Component {
   constructor(props) {
     super(props);
@@ -8,6 +8,7 @@ class Video extends React.Component {
       url: appData.currentUrl,
       hideVid: false,
       playing: true,
+      muted: false,
       volume: 1,
       played: 0,
       loaded: 0,
@@ -35,7 +36,7 @@ class Video extends React.Component {
 
   //Audio Controllers
   stop() {
-    this.setState({ url: null, playing: false });
+    this.setState({ url: null, playing: false, progress: 0 });
   }
   playPause() {
     if (this.state.url) {
@@ -44,7 +45,11 @@ class Video extends React.Component {
       this.setState({ url: appData.currentUrl, playing: true });
     }
   }
+  mute() {
+    this.setState({ muted: !this.state.muted });
+  }
   setVolume(vol) {
+    if (this.state.muted) {this.setState({ muted: false })};
     this.setState({ volume: parseFloat(vol.target.value) });
   }
   toggleVideo() {
@@ -62,7 +67,6 @@ class Video extends React.Component {
       });
     }
     if (this.state.adminFlag) {
-      console.log(`this.state.progress ${this.state.progress}`);
       this.props.socket.emit('setTime', {time: this.state.progress});
     }
   }
@@ -76,34 +80,42 @@ class Video extends React.Component {
             url={this.state.url}
             hidden={this.state.hideVid} //hides the video frame by default; can be toggled
             playing={this.state.playing} //controls playback
-            volume={this.state.volume}
+            //volume={this.state.volume}
+            volume={this.state.muted ? 0 : this.state.volume}
             onPlay={() => this.setState({ playing: true }) }
             onPause={() => this.setState({ playing: false}) }
-            onEnded={() => this.setState({ playing: false}) }
+            onEnded={() => this.setState({ playing: false, progress: 0}) }
             onDuration={duration => this.setState({ duration }) } //logs the overall video duration
             onProgress={this.verifySync.bind(this)}
           />
           <div className='container'>
 
             <div className='row' id='visuals'>
-              <div className='col-sm-4'>
-                <input id='trackingBar' type='range' min={0} max={1}
-                  step='any' value={this.state.progress}/>
+              <div className='col-sm-5'>
+                 <div className="progress">
+                  <div className="progress-bar progress-bar-striped active"
+                    role="progressbar" style={{width: (this.state.progress*100)+'%'}}>
+                    <center>{Math.floor(this.state.progress*this.state.duration)}</center>
+                  </div>
+                </div>
               </div>
-              <div className='col-sm-4'>
-                <button id='toggleVideo' onClick={this.toggleVideo.bind(this)}>{this.state.hideVid ? 'Show Video' : 'Hide Video'}</button>
+              <div className='col-sm-3'>
+                <button className='btn btn-md btn-success' onClick={this.playPause.bind(this)}><span className={this.state.playing ? 'glyphicon glyphicon-pause' : 'glyphicon glyphicon-play'}></span></button>
+                <button className='btn btn-md btn-danger' onClick={this.stop.bind(this)}><span className='glyphicon glyphicon-stop'></span></button>
+                <button data-toggle='tooltip' title='Toggle video' className='btn btn-sm' onClick={this.toggleVideo.bind(this)}><span className={this.state.hideVid ? 'glyphicon glyphicon-eye-open' : 'glyphicon glyphicon-eye-close'}></span></button>
               </div>
             </div>
 
             <div className='row' id='audioCtrl'>
-              <div className='col-sm-2'>
-                <input id='volumeCtrl' type='range' min={0} max={1} step='any'
-                  value={this.state.volume}
-                  onChange={this.setVolume.bind(this)} />
+              <div className='col-sm-1'>
+                <button className={this.state.muted ? 'btn btn-sm btn-danger' : 'btn btn-sm btn-success'} onClick={this.mute.bind(this)}>
+                  <span className={this.state.muted ? 'glyphicon glyphicon-volume-off' : ((this.state.volume<0.5) ? 'glyphicon glyphicon-volume-down' : 'glyphicon glyphicon-volume-up' ) }></span>
+                </button>
               </div>
               <div className='col-sm-2'>
-                <button id='playPauseBtn' onClick={this.playPause.bind(this)}>{this.state.playing ? 'Pause' : 'Play'}</button>
-                <button id='stopBtn' onClick={this.stop.bind(this)}>Stop</button>
+                <input id='volumeCtrl' type='range' min={0} max={1} step='any'
+                  value={this.state.muted ? 0 : this.state.volume}
+                  onChange={this.setVolume.bind(this)} />
               </div>
             </div>
 
@@ -156,9 +168,9 @@ class Add extends React.Component {
         <form onSubmit={this.urlSubmit.bind(this)}>
           <label>
             Video URL:
-            <input type="text" ref="addUrlField"/>
+            <input className="form-control" id="focusedInput" type="text" ref="addUrlField"/>
           </label>
-          <input type="submit" value="Submit" />
+          <input className='btn btn-sm btn-primary' type="submit" value="Submit"/>
         </form>
         {this.state.error}
       </div>
@@ -337,7 +349,7 @@ class Chat extends React.Component {
 
 //appData for sharing between, mostly for tests before our database hook up
 var appData = {
-  currentUrl: 'https://www.youtube.com/watch?v=aeL9gagV_VA',
+  currentUrl: 'https://www.youtube.com/watch?v=wbl3P4pP0K4',
   currentTime: 0
 };
 
