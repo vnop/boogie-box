@@ -4,11 +4,10 @@ var socket = require('socket.io');
 
 var port = portFile.port;
 
-var server = app.listen(port, function() {
+var io = socket(server);
+var server = app.listen(port, function () {
   console.log('We got the boogie on port', port);
 });
-
-var io = socket(server);
 
 var masterTime = 0;
 var masterClient = [];
@@ -38,3 +37,6 @@ io.on('connection', function (socket) {
     }
   });
 });
+
+
+
