@@ -3,3 +3,4 @@ server/portFile.js
 client/compiled/
 client/bower_components
 client/socketAddr.js
+npm-debug.log
