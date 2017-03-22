@@ -8,6 +8,7 @@ class Video extends React.Component {
       url: appData.currentUrl,
       hideVid: false,
       playing: true,
+      muted: false,
       volume: 1,
       played: 0,
       loaded: 0,
@@ -44,7 +45,11 @@ class Video extends React.Component {
       this.setState({ url: appData.currentUrl, playing: true });
     }
   }
+  mute() {
+    this.setState({ muted: !this.state.muted });
+  }
   setVolume(vol) {
+    if (this.state.muted) {this.setState({ muted: false })};
     this.setState({ volume: parseFloat(vol.target.value) });
   }
   toggleVideo() {
@@ -75,7 +80,8 @@ class Video extends React.Component {
             url={this.state.url}
             hidden={this.state.hideVid} //hides the video frame by default; can be toggled
             playing={this.state.playing} //controls playback
-            volume={this.state.volume}
+            //volume={this.state.volume}
+            volume={this.state.muted ? 0 : this.state.volume}
             onPlay={() => this.setState({ playing: true }) }
             onPause={() => this.setState({ playing: false}) }
             onEnded={() => this.setState({ playing: false, progress: 0}) }
@@ -85,7 +91,7 @@ class Video extends React.Component {
           <div className='container'>
 
             <div className='row' id='visuals'>
-              <div className='col-sm-4'>
+              <div className='col-sm-5'>
                  <div className="progress">
                   <div className="progress-bar progress-bar-striped active"
                     role="progressbar" style={{width: (this.state.progress*100)+'%'}}>
@@ -93,24 +99,23 @@ class Video extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className='col-sm-4'>
-                <button data-toggle='tooltip' title='Toggle video' className='btn btn-xs' onClick={this.toggleVideo.bind(this)}><span className={this.state.hideVid ? 'glyphicon glyphicon-eye-open' : 'glyphicon glyphicon-eye-close'}></span></button>
+              <div className='col-sm-3'>
+                <button className='btn btn-md btn-success' onClick={this.playPause.bind(this)}><span className={this.state.playing ? 'glyphicon glyphicon-pause' : 'glyphicon glyphicon-play'}></span></button>
+                <button className='btn btn-md btn-danger' onClick={this.stop.bind(this)}><span className='glyphicon glyphicon-stop'></span></button>
+                <button data-toggle='tooltip' title='Toggle video' className='btn btn-sm' onClick={this.toggleVideo.bind(this)}><span className={this.state.hideVid ? 'glyphicon glyphicon-eye-open' : 'glyphicon glyphicon-eye-close'}></span></button>
               </div>
             </div>
 
             <div className='row' id='audioCtrl'>
-              <div className='col-sm-2'>
-                <div className='row'>
-                  <span className='col-sm-4' className="glyphicon glyphicon-volume-down"></span>
-                  <input className='col-sm-4' id='volumeCtrl' type='range' min={0} max={1} step='any'
-                    value={this.state.volume}
-                    onChange={this.setVolume.bind(this)} />
-                  <span className='col-sm-4' className="glyphicon glyphicon-volume-up"></span>
-                </div>
+              <div className='col-sm-1'>
+                <button className={this.state.muted ? 'btn btn-sm btn-danger' : 'btn btn-sm btn-success'} onClick={this.mute.bind(this)}>
+                  <span className={this.state.muted ? 'glyphicon glyphicon-volume-off' : ((this.state.volume<0.5) ? 'glyphicon glyphicon-volume-down' : 'glyphicon glyphicon-volume-up' ) }></span>
+                </button>
               </div>
               <div className='col-sm-2'>
-                <button className='btn btn-sm btn-success' onClick={this.playPause.bind(this)}><span className={this.state.playing ? 'glyphicon glyphicon-pause' : 'glyphicon glyphicon-play'}></span></button>
-                <button className='btn btn-sm btn-danger' onClick={this.stop.bind(this)}><span className='glyphicon glyphicon-stop'></span></button>
+                <input id='volumeCtrl' type='range' min={0} max={1} step='any'
+                  value={this.state.muted ? 0 : this.state.volume}
+                  onChange={this.setVolume.bind(this)} />
               </div>
             </div>
 
