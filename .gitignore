@@ -1,6 +1,6 @@
 node_modules/
-server/portFile.js
-client/compiled/
+server/config.js
+client/compiled
 client/bower_components
 npm-debug.log
 client/socketAddr.js
