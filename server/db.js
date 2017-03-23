@@ -1,4 +1,4 @@
-var Sequelize = require('Sequelize');
+var Sequelize = require('sequelize');
 const path = require('path');
 
 var sequelize = new Sequelize('database', 'username', 'password', {
