@@ -134,6 +134,7 @@ class Video extends React.Component {
                 onPlay={() => this.setState({ playing: true }) }
                 onPause={() => this.setState({ playing: false}) }
                 onEnded={this.onVideoEnd.bind(this)}
+                onError={this.onVideoEnd.bind(this)}
                 onDuration={duration => this.setState({ duration }) } //logs the overall video duration
                 onProgress={this.verifySync.bind(this)}
               />
