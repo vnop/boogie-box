@@ -12,7 +12,7 @@ class App extends React.Component {
       <div id="app" className="container">
         <div className="row">
           <div className="col-md-12">
-            <div className="jumbostron text-center" id="titleText">
+            <div id="titleText" className="jumbostron text-center">
               <h1>Boogie-Box</h1>
               <p>it's boogie time</p>
             </div>

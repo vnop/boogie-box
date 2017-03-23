@@ -1,8 +1,13 @@
+#titleText {
+  font-family: 'Carter One';
+}
+
 body {
   background: url('https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-168544.jpg')grey no-repeat fixed;
   background-size: cover;
   background-blend-mode: screen;
 }
+
 
 /*CONTENTS OF VIDEO PANEL HEADER*/
 #audioTitle {
