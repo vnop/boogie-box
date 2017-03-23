@@ -153,7 +153,8 @@ class Add extends React.Component {
       this.setState({
         error: ''
       });
-      appData.currentUrl = inputVal;
+      apiHelper.postVideo(inputVal);
+      this.props.updateQueue();
       this.refs.addUrlField.value = '';
     } else {
       console.log('Not a valid youtube link');
@@ -258,7 +259,7 @@ class QueueElement extends React.Component {
         <tr>
           <td>
             <p> {this.props.video.title} </p>
-            <p> {this.props.video.videoUrl} </p>
+            <p> {this.props.video.videourl} </p>
           </td>
 
           <td>
@@ -276,20 +277,30 @@ class QueueElement extends React.Component {
   }
 };
 
+
 class Queue extends React.Component {
   constructor(props) {
     super(props);
 
-    var dummyData = [
-      {id: 0, videoUrl: 'https://www.youtube.com/watch?v=laNCDelVXpk', title: 'Lucian ft. Olivera - Sober Heart', upVote: 10, downVote: 0},
-      {id: 1, videoUrl: 'https://www.youtube.com/watch?v=A8jXapCG0VQ', title: 'Futuristik ft. Miyoki - Waterborne', upVote: 3, downVote: 3},
-      {id: 2, videoUrl: 'https://www.youtube.com/watch?v=PZbkF-15ObM', title: 'C2C - Delta (official Video)', upVote: 284, downVote: 23},
-      {id: 3, videoUrl: 'https://www.youtube.com/watch?v=Wga5A6R9BJg', title: 'Slightly Left of Centre - Love The Way You Move (LTWYM) Official Music Video', upVote: 4, downVote: 8}
-    ];
-
     this.state = {
-      videoList: dummyData
+      videoList: []
     };
+
+    this.updateQueue();
+  }
+
+  updateQueue() {
+    var getVideosCallback = function(err, data) {
+      if (err) {
+        console.log('Error on retrieving videos', err);
+      } else {
+        this.setState({
+          videoList: data
+        });
+      }
+    };
+
+    apiHelper.getVideos(getVideosCallback.bind(this));
   }
 
   render() {
@@ -300,8 +311,67 @@ class Queue extends React.Component {
 
     return (
       <div>
+        <p className="queueHeading">Video Queue</p>
         { queueElements }
       </div>
+    );
+  }
+};
+
+class ChatInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      prevName: this.props.name,
+      name: this.props.name
+    }
+  }
+
+  chatSubmit(event) {
+    event.preventDefault();
+    var messageText = this.refs.messageInput.value;
+    var prevName = this.state.prevName;
+    this.refs.messageInput.value = '';
+
+    this.setState({
+      prevName: this.refs.nameInput.value
+    });
+
+    //test version until chat DB is up
+    var messageID;
+    if(prevName !== this.state.name) {
+      messageID = appData.chats[appData.chats.length - 1].id + 1;
+      appData.chats.push({
+        id: messageID,
+        user: prevName,
+        text: 'I changed my name to \'' + this.state.name + '\''
+      });
+    }
+
+    messageID = appData.chats[appData.chats.length - 1].id + 1;
+    appData.chats.push({
+      id: messageID,
+      user: this.state.name,
+      text: messageText
+    });
+    // end test code
+
+    this.props.updateChat();
+  }
+
+  changeName() {
+    this.setState({
+      name: this.refs.nameInput.value
+    });
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.chatSubmit.bind(this)}>
+        <input type="text" ref="nameInput" value={this.state.name} onChange={this.changeName.bind(this)}></input>
+        <input type="text" ref="messageInput"></input>
+        <button type="submit">Send</button>
+      </form>
     );
   }
 };
@@ -321,25 +391,31 @@ class ChatMessage extends React.Component {
     );
   }
 
-}
+};
 
 //CHAT CONTROLLER
 class Chat extends React.Component {
   constructor(props) {
     super(props);
 
-    var dummyData = [
-      {id: 0, user: 'Phteven', text: 'This is a message!'},
-      {id: 1, user: 'Barabus', text: 'This song sucks'},
-      {id: 2, user: 'Phteven', text: 'That\'s not very nice barabus'},
-      {id: 3, user: 'Gertrude', text: 'Has anyone really been far as decided to use even go want to do look more like?'},
-      {id: 4, user: 'Kevin Bacon Himself', text: 'Yes'},
-      {id: 5, user: 'Karylon the Deceiver', text: 'Your existence is a mistake'}
-    ];
-
     this.state = {
-      messages: dummyData
+      messages: appData.chats,
+      anonName: this.genAnonName()
     }
+  }
+
+  genAnonName() {
+    var num = Math.floor(Math.random() * 1000);
+    var numStr = '000' + num;
+    numStr = numStr.substring(numStr.length - 3);
+    var name = 'Anon' + numStr;
+    return name;
+  }
+
+  updateChat() {
+    this.setState({
+      messages: appData.chats
+    });
   }
 
   render() {
@@ -352,6 +428,9 @@ class Chat extends React.Component {
     return (
       <div className="chatBox">
         {chats}
+        <div>
+          <ChatInput name={this.state.anonName} updateChat={this.updateChat.bind(this)}/>
+        </div>
       </div>
     )
   }
@@ -359,8 +438,16 @@ class Chat extends React.Component {
 
 //appData for sharing between, mostly for tests before our database hook up
 var appData = {
-  currentUrl: 'https://www.youtube.com/watch?v=wbl3P4pP0K4',
-  currentTime: 0
+  currentUrl: 'https://www.youtube.com/watch?v=UbQgXeY_zi4',
+  currentTime: 0,
+  chats: [
+    {id: 0, user: 'Phteven', text: 'This is a message!'},
+    {id: 1, user: 'Barabus', text: 'This song sucks'},
+    {id: 2, user: 'Phteven', text: 'That\'s not very nice barabus'},
+    {id: 3, user: 'Gertrude', text: 'Has anyone really been far as decided to use even go want to do look more like?'},
+    {id: 4, user: 'Kevin Bacon Himself', text: 'Yes'},
+    {id: 5, user: 'Karylon the Deceiver', text: 'Your existence is a mistake'}
+  ]
 };
 
 //AVAIL CLASSES TO WINDOW
