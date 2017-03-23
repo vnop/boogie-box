@@ -3,6 +3,10 @@ class App extends React.Component {
     super(props);
   }
 
+  updateQueue() {
+    this.refs.queue.updateQueue();
+  }
+
   render() {
     return (
       <div id="app" className="container">
@@ -17,7 +21,7 @@ class App extends React.Component {
 
         <div className="row">
           <div className="col-md-12">
-            <Add/>
+            <Add updateQueue={this.updateQueue.bind(this)}/>
           </div>
         </div>
 
@@ -31,7 +35,7 @@ class App extends React.Component {
               <div className="panel panel-default">
                 <div id="queueHead" className="panel-heading">Queue</div>
                 <div className="panel-body">
-                  <Queue/>
+                  <Queue ref="queue"/>
                 </div>
               </div>
             </div>
