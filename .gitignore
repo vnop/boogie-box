@@ -1,7 +1,9 @@
 node_modules/
 server/portFile.js
-client/compiled/
+client/compiled
 client/bower_components
 npm-debug.log
 client/socketAddr.js
 db/boogiebox.sqlite
+.floo
+.flooignore
