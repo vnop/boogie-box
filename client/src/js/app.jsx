@@ -6,7 +6,6 @@ class App extends React.Component {
   updateQueue() {
     this.refs.queue.updateQueue();
   }
-
   advanceQueue() {
     return this.refs.queue.advanceQueue();
   }
@@ -14,7 +13,6 @@ class App extends React.Component {
   startVideo() {
     this.refs.player.startVideo();
   }
-
   render() {
     return (
       <div id="app" className="container">
@@ -43,7 +41,11 @@ class App extends React.Component {
               <div className="panel panel-default">
                 <div id="queueHead" className="panel-heading">Queue</div>
                 <div className="panel-body">
+<<<<<<< HEAD
                   <Queue ref="queue" startVideo={this.startVideo.bind(this)}/>
+=======
+                  <Queue ref="queue"/>
+>>>>>>> combined sean's style changes with alex's component behaviour updates
                 </div>
               </div>
             </div>

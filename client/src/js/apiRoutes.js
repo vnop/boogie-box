@@ -96,7 +96,11 @@ var removeVideo = function(video, cb) {
 
   $.ajax({
     method: 'DELETE',
+<<<<<<< HEAD
     url: '/api/url/' + video.id,
+=======
+    url: '/api/url' + video.id,
+>>>>>>> combined sean's style changes with alex's component behaviour updates
     success: function(response) {
       console.log('response on removeVideo', JSON.stringify(response));
       cb(null, response);
