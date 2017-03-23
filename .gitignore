@@ -3,5 +3,4 @@ server/config.js
 client/compiled
 client/bower_components
 npm-debug.log
-db/boogiebox.sqlite
 
