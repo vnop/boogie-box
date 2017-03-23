@@ -52,12 +52,7 @@ class App extends React.Component {
           </div>
 
           <div className="col-md-5">
-            <div id="chatPanel" className="panel panel-info">
-              <div id="chatTitle" className="panel-heading">Boogie-Chat</div>
-              <div id="chatPanBody" className="panel-body">
-                <Chat/>
-              </div>
-            </div>
+            <Chat/>
           </div>
 
         </div>

@@ -65,7 +65,7 @@ class ChatMessage extends React.Component {
 
     return (
       <div className='chatMessage'>
-        <span className='chatMessageUser'> {this.props.message.user}: </span>
+        <span className='chatMessageUser' className='label label-primary'>{this.props.message.user}:</span>
         <span className='chatMessageText'> {this.props.message.text} </span>
       </div>
     );
@@ -107,9 +107,14 @@ class Chat extends React.Component {
 
     return (
       <div className="chatBox">
-        {chats}
-        <div>
-          <ChatInput name={this.state.anonName} updateChat={this.updateChat.bind(this)}/>
+        <div id='chatPanel' className='panel panel-info'>
+          <div id='chatTitle' className='panel-heading'>Boogie-Chat</div>
+          <div id='chatPanBody' className='panel-body'>
+            <div id='textBody'>{chats}</div>
+          </div>
+          <div id='chatPanFtr' className='panel-footer'>
+            <ChatInput name={this.state.anonName} updateChat={this.updateChat.bind(this)}/>
+          </div>
         </div>
       </div>
     )
