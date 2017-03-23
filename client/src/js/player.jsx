@@ -158,8 +158,9 @@ class Add extends React.Component {
       this.setState({
         error: ''
       });
-      apiHelper.postVideo(inputVal);
-      this.props.updateQueue();
+      apiHelper.postVideo(inputVal, function() {
+        this.props.updateQueue();
+      }.bind(this));
       this.refs.addUrlField.value = '';
     } else {
       console.log('Not a valid youtube link');
@@ -173,9 +174,8 @@ class Add extends React.Component {
 
   validYoutubeUrl(url) {
     var url1 = 'youtube.com';
-    var url2 = 'youtu.be';
 
-    return url.indexOf(url1) !== -1 || url.indexOf(url2) !== -1;
+    return url.indexOf(url1) !== -1 && url.indexOf('?v=') !== -1;
   }
 
   render() {
@@ -304,8 +304,12 @@ class Queue extends React.Component {
         });
       }
     };
-
     apiHelper.getVideos(getVideosCallback.bind(this));
+  }
+
+  advanceQueue() {
+    var nextVid = this.state.videoList.shift();
+
   }
 
   render() {
@@ -316,7 +320,6 @@ class Queue extends React.Component {
 
     return (
       <div>
-        <p className="queueHeading">Video Queue</p>
         { queueElements }
       </div>
     );
