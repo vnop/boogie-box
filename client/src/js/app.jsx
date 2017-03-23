@@ -29,7 +29,7 @@ class App extends React.Component {
 
             <div className="row">
               <div className="panel panel-default">
-                <div className="heading">Queue</div>
+                <div id="queueHead" className="panel-heading">Queue</div>
                 <div className="panel-body">
                   <Queue/>
                 </div>

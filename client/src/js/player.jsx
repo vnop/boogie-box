@@ -73,7 +73,7 @@ class Video extends React.Component {
 
   render() {
     return (
-      <div className='container-fluid' className="panel panel-info">
+      <div id='audioPanel' className='container-fluid' className="panel panel-info">
         <div id='plyrPnlHeading' className="panel-heading">
           <div id='hideVidBtn' data-toggle='tooltip' title='Toggle video' onClick={this.toggleVideo.bind(this)}><span className={this.state.hideVid ? 'glyphicon glyphicon-eye-close' : 'glyphicon glyphicon-eye-open'}></span></div>
           <div id='audioTitle'>Song Title</div>
