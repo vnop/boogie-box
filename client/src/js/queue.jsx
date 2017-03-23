@@ -154,7 +154,6 @@ class Queue extends React.Component {
 
   updateQueue() {
     var hadVideos = this.state.hasVideos;
-
     var getVideosCallback = function(err, data) {
       if (err) {
         console.log('Error on retrieving videos', err);
