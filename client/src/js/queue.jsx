@@ -145,28 +145,53 @@ class Queue extends React.Component {
     super(props);
 
     this.state = {
-      videoList: []
+      videoList: [],
+      hasVideos: false
     };
 
     this.updateQueue();
   }
 
   updateQueue() {
+    var hadVideos = this.state.hasVideos;
+
     var getVideosCallback = function(err, data) {
       if (err) {
         console.log('Error on retrieving videos', err);
       } else {
+        var hasVideos = data.length > 0;
+
         this.setState({
-          videoList: data
+          videoList: data,
+          hasVideos: hasVideos
         });
+
+        if (!hadVideos && this.state.hasVideos) {
+          this.props.startVideo();
+        }
       }
     };
     apiHelper.getVideos(getVideosCallback.bind(this));
   }
 
   advanceQueue() {
-    var nextVid = this.state.videoList.shift();
+    if (this.state.hasVideos) {
+      var newVid = this.state.videoList[0];
 
+      apiHelper.removeVideo(newVid, function() {
+        apiHelper.getVideos(function(err, data) {
+          var hasVideos = data.length > 0;
+          this.setState({
+            videoList: data,
+            hasVideos: hasVideos
+          });
+        }.bind(this));
+      }.bind(this));
+
+      return newVid;
+    }
+
+    return null;
   }
 
   render() {
