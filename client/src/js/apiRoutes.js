@@ -57,7 +57,7 @@ var postVideo = function(url, cb) {
   var video = {
     videourl: url,
     origin: 'youtube',
-    title: getVideoTitle(url),
+    // title: getVideoTitle(url),
     upVote: 0,
     downVote: 0
   }
