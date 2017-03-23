@@ -64,7 +64,7 @@ class Video extends React.Component {
     this.setState({ progress: time.played });
     var clientTime = Math.floor(this.state.progress*this.state.duration);
     var serverTime = Math.floor(this.state.serverTime*this.state.duration);
-    if (Math.abs(clientTime - serverTime) >= 4 && !this.state.adminFlag) {
+    if (Math.abs(clientTime - serverTime) >= 4 && !this.state.adminFlag && this.state.useSync) {
       this.player.seekTo(this.state.serverTime);
       this.setState({
         progress: this.state.serverTime
