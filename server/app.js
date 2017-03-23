@@ -50,8 +50,29 @@ app.post('/api/url', function(req, res) {
   }
 });
 
+app.put('/api/url/:id', function (req, res) {
+  // send -> '/api/url/upvote/_id'
+  // send -> '/api/url/downvote/_id'
+
+  // req.body.value
+
+  var id = req.params.id;
+
+  if ((req.body).hasOwnProperty('upVote') || (req.body).hasOwnProperty('downVote')) {
+    VideoData.update(req.body, {
+      where: {
+        id: id,
+      }
+    });
+
+    res.send('updated for id ' + id);
+  } else {
+    res.send('error');
+  }
+});
+
 app.delete('/api/url/:id', function(req, res) {
-  VideoData.destroy({where : {id: req.params.id}}).then(function () {
+  VideoData.destroy({ where : {id: req.params.id} }).then(function () {
     res.send('deleted successfully');
   });
 });

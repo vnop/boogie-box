@@ -8,13 +8,12 @@ var sequelize = new Sequelize('database', 'username', 'password', {
 });
 
 var VideoData = sequelize.define('videodata', {
-      videourl: Sequelize.STRING,
-      origin: Sequelize.STRING,
-      title: Sequelize.STRING,
-      upVote: Sequelize.INTEGER,
-      downVote: Sequelize.INTEGER
-    }
-);
+  videourl: Sequelize.STRING,
+  origin: Sequelize.STRING,
+  title: Sequelize.STRING,
+  upVote: Sequelize.INTEGER,
+  downVote: Sequelize.INTEGER
+});
 
 // VideoData.sync({force: true});
 VideoData.sync();

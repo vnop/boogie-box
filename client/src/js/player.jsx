@@ -4,8 +4,15 @@ class Video extends React.Component {
   constructor(props) {
     super(props);
     //default audio states
+
+    if (!this.props.video) {
+      var url = null;
+    } else {
+      var url = this.props.video.videourl;
+    }
     this.state = {
-      url: appData.currentUrl,
+      video: this.props.video,
+      url: url,
       hideVid: false,
       playing: true,
       muted: false,
@@ -43,7 +50,7 @@ class Video extends React.Component {
     if (this.state.url) {
       this.setState({ playing: !this.state.playing });
     } else {
-      this.setState({ url: appData.currentUrl, playing: true });
+      this.setState({ url: this.state.video.videourl, playing: true });
     }
   }
   mute() {
@@ -75,6 +82,36 @@ class Video extends React.Component {
     }
   }
 
+  startVideo() {
+    if(this.state.video === null && this.state.url === null) {
+      this.onVideoEnd();
+    }
+  }
+
+  onVideoEnd() {
+    var newVid = this.props.advanceQueue();
+
+    this.setState({
+      url: ''
+    });
+
+    if (newVid) {
+      console.log ('new video', newVid)
+      this.setState({
+        video: newVid,
+        url: newVid.videourl,
+        progress: 0
+      });
+    } else {
+      console.log('no new vid');
+      this.setState({
+        video: null,
+        url: null,
+        progress: 0
+      })
+    }
+  }
+
   render() {
     return (
       <div id='audioPanel' className='container-fluid' className="panel panel-info">
@@ -96,7 +133,7 @@ class Video extends React.Component {
                 volume={this.state.muted ? 0 : this.state.volume}
                 onPlay={() => this.setState({ playing: true }) }
                 onPause={() => this.setState({ playing: false}) }
-                onEnded={() => this.setState({ playing: false, progress: 0}) }
+                onEnded={this.onVideoEnd.bind(this)}
                 onDuration={duration => this.setState({ duration }) } //logs the overall video duration
                 onProgress={this.verifySync.bind(this)}
               />
@@ -115,7 +152,7 @@ class Video extends React.Component {
                   role='progressbar' style={{width: (this.state.progress*100)+'%'}}>
                 </div>
                 <div id='dispCurTime'>
-                  {Math.floor((this.state.duration*this.state.progress)/60)+':'+Math.floor(((this.state.duration*this.state.progress)-Math.floor((this.state.duration*this.state.progress)/60)*60))}
+                  {Math.floor((this.state.duration*this.state.progress)/60)+':'+('00'+(Math.floor(((this.state.duration*this.state.progress)-Math.floor((this.state.duration*this.state.progress)/60)*60)))).slice(-2)}
                 </div>
               </div>
             </div>
