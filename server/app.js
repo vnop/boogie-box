@@ -5,6 +5,8 @@ var path = require('path');
 var VideoData = require('./db').VideoData;
 var url = require('url');
 var request = require('request');
+var config = require('./config');
+
 
 var app = express();
 
@@ -28,7 +30,7 @@ app.post('/api/url', function(req, res) {
     //'https://www.googleapis.com/youtube/v3/videos?id=' + queryData.v + '&key=AIzaSyDq9XWYzDJrY3jNbZExt8UxHXXNamWbNE0%20&fields=items(id,snippet(title))&part=snippet'
 
 
-    request('https://www.googleapis.com/youtube/v3/videos?id=' + queryData.v + '&key=AIzaSyDq9XWYzDJrY3jNbZExt8UxHXXNamWbNE0%20&fields=items(id,snippet(title))&part=snippet', function (err, response, body) {
+    request('https://www.googleapis.com/youtube/v3/videos?id=' + queryData.v + '&key=' + config.YOUTUBE_API_KEY + '&fields=items(id,snippet(title))&part=snippet', function (err, response, body) {
       if (err) {
         throw err;
       }

@@ -1,8 +1,8 @@
 var app = require('./app');
-var portFile = require('./portFile');
+var config = require('./config');
 var socket = require('socket.io');
 
-var port = portFile.port;
+var port = config.port;
 
 var server = app.listen(port, function () {
   console.log('We got the boogie on port', port);
