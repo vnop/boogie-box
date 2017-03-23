@@ -38,9 +38,9 @@ class Add extends React.Component {
   render() {
     return (
       <div>
+        <span id='qAddText'>Video URL</span>
         <form onSubmit={this.urlSubmit.bind(this)}>
-          <label>
-            Video URL:
+          <label id='vidSubmit'>
             <input className="form-control" id="focusedInput" type="text" ref="addUrlField"/>
           </label>
           <input className='btn btn-sm btn-primary' type="submit" value="Submit"/>
@@ -200,8 +200,13 @@ class Queue extends React.Component {
     });
 
     return (
-      <div>
-        { queueElements }
+      <div className='panel panel-default'>
+        <div id='qPanelHead' className='panel-heading'>
+          <Add updateQueue={this.updateQueue.bind(this)}/>
+        </div>
+        <div id='qPanelBody' className='panel-body'>
+          { queueElements }
+        </div>
       </div>
     );
   }
