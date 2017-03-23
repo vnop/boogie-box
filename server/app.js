@@ -2,7 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var path = require('path');
-var { VideoData } = require('./db');
+var VideoData = require('./db').VideoData;
 
 var app = express();
 
