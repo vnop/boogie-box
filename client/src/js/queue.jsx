@@ -76,7 +76,7 @@ class QueueElement extends React.Component {
       this.setState({
         upVote: this.state.upVote + 1,
         upVoted: true,
-        upStyle: {border: '1px solid green'},
+        upStyle: {border: '2px solid green'},
         downVote: this.state.downVote - 1,
         downVoted: false,
         downStyle: {}
@@ -85,7 +85,7 @@ class QueueElement extends React.Component {
       this.setState({
         upVote: this.state.upVote + 1,
         upVoted: true,
-        upStyle: {border: '1px solid green'}
+        upStyle: {border: '2px solid green'}
       });
     }
   }
@@ -101,7 +101,7 @@ class QueueElement extends React.Component {
       this.setState({
         downVote: this.state.downVote + 1,
         downVoted: true,
-        downStyle:  {border: '1px solid red'},
+        downStyle:  {border: '2px solid red'},
         upVote: this.state.upVote - 1,
         upVoted: false,
         upStyle: {}
@@ -110,31 +110,31 @@ class QueueElement extends React.Component {
       this.setState({
         downVote: this.state.downVote + 1,
         downVoted: true,
-        downStyle: {border: '1px solid red'}
+        downStyle: {border: '2px solid red'}
       });
     }
   }
 
   render() {
     return (
-      <table>
-        <tr>
-          <td>
-            <p> {this.props.video.title} </p>
-            <p> {this.props.video.videourl} </p>
-          </td>
+      <div id='qEntry' className='container'>
+        <div id='vidInQ' className='col-sm-10'>
+          <div id='vidTitle'>
+            <a href={this.props.video.videourl} target="_blank">{this.props.video.title}</a>
+          </div>
+        </div>
 
-          <td>
-            <button onClick={this.voteUp.bind(this)} style={this.state.upStyle}> ^ </button>
-            <span> {this.state.upVote} </span>
-          </td>
-
-          <td>
-            <button onClick={this.voteDown.bind(this)} style={this.state.downStyle}> v </button>
-            <span> {this.state.downVote} </span>
-          </td>
-        </tr>
-      </table>
+        <div id='dwnVoteCol' className='col-sm-1'>
+          <div id='dwnVote'>
+            <button className='btn btn-md btn-default' onClick={this.voteDown.bind(this)} style={this.state.downStyle}><span className='glyphicon glyphicon-circle-arrow-down'> {this.state.downVote}</span></button>
+          </div>
+        </div>
+        <div id='upVoteCol' className='col-sm-1'>
+          <div id='upVote'>
+            <button className='btn btn-md btn-default' onClick={this.voteUp.bind(this)} style={this.state.upStyle}><span className='glyphicon glyphicon-circle-arrow-up'> {this.state.upVote}</span></button>
+          </div>
+        </div>
+      </div>
     )
   }
 };
@@ -200,12 +200,12 @@ class Queue extends React.Component {
     });
 
     return (
-      <div className='panel panel-default'>
+      <div id='qPanel' className='panel panel-default'>
         <div id='qPanelHead' className='panel-heading'>
           <Add updateQueue={this.updateQueue.bind(this)}/>
         </div>
         <div id='qPanelBody' className='panel-body'>
-          { queueElements }
+          <div id='qTextBody'>{ queueElements }</div>
         </div>
       </div>
     );

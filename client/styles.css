@@ -53,20 +53,46 @@ body {
 #vidSubmit {
   width: 60%;
 }
+/*QUEUE BODY*/
+#qPanel {
+  width: 682.5px;
+}
 #qPanelBody {
   margin-top: auto;
   overflow: auto;
   position: relative;
   height: 278px;
 }
-/*ALL CHAT MESSAGES*/
 #qTextBody {
   overflow: auto;
   max-height: 100%;
+  width: 660px;
   position: absolute;
-  bottom: 0;
+  top: 0;
+}
+#qEntry {
+  max-width: 640px;
+  border-top-style: solid;
+  border-top-width: 2px;
+}
+#vidInQ {
+  max-width: 450px;
+  float: left;
+}
+#upVoteCol {
+  float: right;
+  width: 60px;
+  top: 50%;
+  bottom: 50%;
+}
+#dwnVoteCol {
+  width: 60px;
+  float: right;
+  top: 50%;
+  bottom: 50%;
 }
 
+/*ALL CHAT MESSAGES*/
 /*CHAT PANEL*/
 #chatTitle {
   font-weight: bold;
