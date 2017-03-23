@@ -65,7 +65,7 @@ class Video extends React.Component {
   }
 
   toggleSync() {
-    this.setState({ useSync: !this.state.useSync })
+    this.setState({ useSync: !this.state.useSync });
   }
   verifySync(time) {
     this.setState({ progress: time.played });
@@ -118,7 +118,7 @@ class Video extends React.Component {
         <div id='plyrPnlHeading' className="panel-heading">
           <div id='hideVidBtn' data-toggle='tooltip' title='Toggle video' onClick={this.toggleVideo.bind(this)}><span className={this.state.hideVid ? 'glyphicon glyphicon-eye-close' : 'glyphicon glyphicon-eye-open'}></span></div>
           <div id='useSyncBtn' data-toggle='tooltip' title='Toggle sync' onClick={this.toggleSync.bind(this)}><span className={this.state.useSync ? 'glyphicon glyphicon-transfer' : 'glyphicon glyphicon-headphones'}></span></div>
-          <div id='audioTitle'>Song Title</div>
+          <div id='audioTitle'>{(!this.state.video) ? 'Find a boogie!' : this.state.video.title}</div>
         </div>
 
         <div className="panel-body">
