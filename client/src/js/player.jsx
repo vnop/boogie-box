@@ -73,62 +73,62 @@ class Video extends React.Component {
 
   render() {
     return (
-      <div className='container-fluid'>
-        <div className='row'>
-          <div className='col-md-11'>
-            <ReactPlayer
-              ref={player => { this.player = player } }
-              url={this.state.url}
-              hidden={this.state.hideVid} //hides the video frame by default; can be toggled
-              playing={this.state.playing} //controls playback
-              //volume={this.state.volume}
-              volume={this.state.muted ? 0 : this.state.volume}
-              onPlay={() => this.setState({ playing: true }) }
-              onPause={() => this.setState({ playing: false}) }
-              onEnded={() => this.setState({ playing: false, progress: 0}) }
-              onDuration={duration => this.setState({ duration }) } //logs the overall video duration
-              onProgress={this.verifySync.bind(this)}
-            />
-          </div>
-
-          <div className='col-sm-1'>
-            <button id='hideVidBtn' data-toggle='tooltip' title='Toggle video' onClick={this.toggleVideo.bind(this)}><span className={this.state.hideVid ? 'glyphicon glyphicon-eye-close' : 'glyphicon glyphicon-eye-open'}></span></button>
-          </div>
+      <div className='container-fluid' className="panel panel-info">
+        <div id='plyrPnlHeading' className="panel-heading">
+          <div id='hideVidBtn' data-toggle='tooltip' title='Toggle video' onClick={this.toggleVideo.bind(this)}><span className={this.state.hideVid ? 'glyphicon glyphicon-eye-close' : 'glyphicon glyphicon-eye-open'}></span></div>
+          <div id='audioTitle'>Song Title</div>
         </div>
 
-        <div id='allCtrls' className='row'>
-          <div id='videoCtrl' className='col-xs-2'>
-            <button className='btn btn-sm btn-default' onClick={this.playPause.bind(this)}><span className={this.state.playing ? 'glyphicon glyphicon-pause' : 'glyphicon glyphicon-play'}></span></button>
-            <button className='btn btn-sm btn-default' onClick={this.stop.bind(this)}><span className='glyphicon glyphicon-stop'></span></button>
-          </div>
-
-          <div className='col-xs-6'>
-            <div id='progBar'className='progress'>
-              <div className='progress-bar progress-bar-striped active'
-                role='progressbar' style={{width: (this.state.progress*100)+'%'}}>
-              </div>
-              <div id='dispCurTime'>
-                {Math.floor((this.state.duration*this.state.progress)/60)+':'+Math.floor(((this.state.duration*this.state.progress)-Math.floor((this.state.duration*this.state.progress)/60)*60))}
-              </div>
+        <div className="panel-body">
+          <div className='row'>
+            <div className='col-md-12'>
+              <ReactPlayer
+                ref={player => { this.player = player } }
+                url={this.state.url}
+                hidden={this.state.hideVid} //hides the video frame by default; can be toggled
+                playing={this.state.playing} //controls playback
+                //volume={this.state.volume}
+                volume={this.state.muted ? 0 : this.state.volume}
+                onPlay={() => this.setState({ playing: true }) }
+                onPause={() => this.setState({ playing: false}) }
+                onEnded={() => this.setState({ playing: false, progress: 0}) }
+                onDuration={duration => this.setState({ duration }) } //logs the overall video duration
+                onProgress={this.verifySync.bind(this)}
+              />
             </div>
           </div>
 
-          <div className='col-xs-1'>
-            <div id='dispDuration'>
-            { Math.floor(this.state.duration/60)+':'+(this.state.duration-Math.floor(this.state.duration/60)*60) }
+          <div id='allCtrls' className='row'>
+            <div className='col-xs-8'>
+              <div className='videoCtrl'>
+                <button className='btn btn-sm btn-default' onClick={this.playPause.bind(this)}><span className={this.state.playing ? 'glyphicon glyphicon-pause' : 'glyphicon glyphicon-play'}></span></button>
+                <button className='btn btn-sm btn-default' onClick={this.stop.bind(this)}><span className='glyphicon glyphicon-stop'></span></button>
+              </div>
+
+              <div id='progBar'className='progress'>
+                <div className='progress-bar progress-bar-striped active'
+                  role='progressbar' style={{width: (this.state.progress*100)+'%'}}>
+                </div>
+                <div id='dispCurTime'>
+                  {Math.floor((this.state.duration*this.state.progress)/60)+':'+Math.floor(((this.state.duration*this.state.progress)-Math.floor((this.state.duration*this.state.progress)/60)*60))}
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div className='col-xs-1'>
-            <button id='muteBtn' onClick={this.mute.bind(this)}>
-              <span className={this.state.muted ? 'glyphicon glyphicon-volume-off' : ((this.state.volume<0.5) ? 'glyphicon glyphicon-volume-down' : 'glyphicon glyphicon-volume-up' ) }></span>
-            </button>
-          </div>
+            <div className='col-xs-1'>
+              <div id='dispDuration'>
+              { Math.floor(this.state.duration/60)+':'+(this.state.duration-Math.floor(this.state.duration/60)*60) }
+              </div>
+            </div>
 
-          <div className='col-xs-2'>
-            <input id='volumeCtrl' type='range' min={0} max={1} step='any'
-              value={this.state.muted ? 0 : this.state.volume}
-              onChange={this.setVolume.bind(this)} />
+            <div className='col-xs-3'>
+              <div id='muteBtn' onClick={this.mute.bind(this)}>
+                <span className={this.state.muted ? 'glyphicon glyphicon-volume-off' : ((this.state.volume<0.5) ? 'glyphicon glyphicon-volume-down' : 'glyphicon glyphicon-volume-up' ) }></span>
+              </div>
+              <input id='volumeCtrl' type='range' min={0} max={1} step='any'
+                value={this.state.muted ? 0 : this.state.volume}
+                onChange={this.setVolume.bind(this)} />
+            </div>
           </div>
         </div>
       </div>

@@ -15,7 +15,7 @@ module.exports = function(grunt) {
 
     watch: {
       scripts: {
-        files: ['client/src/**/*.jsx', 'client/src/**.*.js'],
+        files: ['client/src/**/*.jsx', 'client/src/**/*.js'],
         tasks: ['shell:compile']
       }
     },
