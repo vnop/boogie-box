@@ -96,7 +96,7 @@ var removeVideo = function(video, cb) {
 
   $.ajax({
     method: 'DELETE',
-    url: '/api/url' + video.id,
+    url: '/api/url/' + video.id,
     success: function(response) {
       console.log('response on removeVideo', JSON.stringify(response));
       cb(null, response);
