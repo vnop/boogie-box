@@ -16,6 +16,7 @@ class Video extends React.Component {
       progress: 0,
       serverTime: 0,
       playbackRate: 1.0,
+      useSync: true,
       adminFlag: this.props.adminFlag
     };
 
@@ -56,6 +57,9 @@ class Video extends React.Component {
     this.setState({ hideVid: !this.state.hideVid });
   }
 
+  toggleSync() {
+    this.setState({ useSync: !this.state.useSync })
+  }
   verifySync(time) {
     this.setState({ progress: time.played });
     var clientTime = Math.floor(this.state.progress*this.state.duration);
@@ -76,6 +80,7 @@ class Video extends React.Component {
       <div id='audioPanel' className='container-fluid' className="panel panel-info">
         <div id='plyrPnlHeading' className="panel-heading">
           <div id='hideVidBtn' data-toggle='tooltip' title='Toggle video' onClick={this.toggleVideo.bind(this)}><span className={this.state.hideVid ? 'glyphicon glyphicon-eye-close' : 'glyphicon glyphicon-eye-open'}></span></div>
+          <div id='useSyncBtn' data-toggle='tooltip' title='Toggle sync' onClick={this.toggleSync.bind(this)}><span className={this.state.useSync ? 'glyphicon glyphicon-transfer' : 'glyphicon glyphicon-headphones'}></span></div>
           <div id='audioTitle'>Song Title</div>
         </div>
 
