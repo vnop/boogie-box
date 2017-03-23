@@ -43,6 +43,30 @@ body {
   width: 75px;
 }
 
+/*VIDEO QUEUE PANEL*/
+/*QUEUE HEADER*/
+#qAddText {
+  font-weight: bold;
+  float: left;
+  padding: 10px 10px 10px 10px;
+}
+#vidSubmit {
+  width: 60%;
+}
+#qPanelBody {
+  margin-top: auto;
+  overflow: auto;
+  position: relative;
+  height: 278px;
+}
+/*ALL CHAT MESSAGES*/
+#qTextBody {
+  overflow: auto;
+  max-height: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
 /*CHAT PANEL*/
 #chatTitle {
   font-weight: bold;
