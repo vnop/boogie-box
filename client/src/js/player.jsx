@@ -143,7 +143,7 @@ class Video extends React.Component {
 
 //appData for sharing between, mostly for tests before our database hook up
 window.appData = {
-  currentUrl: 'https://www.youtube.com/watch?v=UbQgXeY_zi4',
+  currentUrl: 'https://www.youtube.com/watch?v=KTvfwd3JZTE',
   currentTime: 0,
   chats: [
     {id: 0, user: 'Phteven', text: 'This is a message!'},

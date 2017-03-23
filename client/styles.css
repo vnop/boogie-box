@@ -4,18 +4,18 @@ body {
   background-blend-mode: screen;
 }
 
+
 #audioTitle {
   font-weight: bolder;
 }
-
 #useSyncBtn {
   float: right;
 }
-
 #hideVidBtn {
   float: right;
   padding-left: 5px;
 }
+
 
 #allCtrls {
   max-width: 700px;
@@ -25,30 +25,46 @@ body {
   position: absolute;
   float: left;
 }
-
 #progBar {
   margin-left: 20%;
   width: 350px;
 }
 
+
 #muteBtn {
   float: left;
 }
-
 #volumeCtrl {
   margin-left: 15%;
   width: 75px;
 }
 
+
 #chatTitle {
   font-weight: bold;
   text-align: center;
 }
-
-#chatPan {
+#chatPanBody {
   max-width: 750px;
+  height: 430px;
 }
-
+#userIdBox {
+  width: 100px;
+}
+#chatInputBox {
+  position: relative;
+  width: 60%;
+}
+.chatBox {
+  margin-top: auto;
+  overflow: auto;
+  position: relative;
+  max-height: 400px;
+}
+.chatBox > .chatMessage {
+  bottom: 0;
+  max-height: 400px;
+}
 .chatBox > .chatMessage > .chatMessageUser {
   font-weight: bold;
 }
