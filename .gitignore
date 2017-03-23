@@ -5,3 +5,4 @@ client/bower_components
 npm-debug.log
 client/socketAddr.js
 db/boogiebox.sqlite
+
