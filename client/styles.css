@@ -57,33 +57,12 @@ body {
   position: absolute;
   bottom: 0;
 }
-
-.chatMessageUser {
+#chatMessageUser {
   font-weight: bold;
-}
-
-/*#chatPanBody {
-  max-width: 750px;
-  height: 430px;
 }
 #userIdBox {
   width: 100px;
 }
 #chatInputBox {
-  position: relative;
   width: 60%;
 }
-.chatBox {
-  margin-top: auto;
-  overflow: auto;
-  position: relative;
-  max-height: 400px;
-}
-.chatBox > .chatMessage {
-  bottom: 0;
-  max-height: 400px;
-}
-.chatBox > .chatMessage > .chatMessageUser {
-  font-weight: bold;
-}
-*/
