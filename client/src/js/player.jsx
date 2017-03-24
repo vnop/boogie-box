@@ -136,6 +136,11 @@ class Video extends React.Component {
           video: this.state.serverData.video,
           url: this.state.serverData.video.videourl
         });
+      } else {
+        this.setState({
+          video: null,
+          url: null
+        });
       }
     }
   }
