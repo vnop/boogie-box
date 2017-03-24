@@ -3,8 +3,21 @@ class ChatInput extends React.Component {
     super(props);
     this.state = {
       prevName: this.props.name,
-      name: this.props.name
+      name: this.props.name,
+      messages: this.props.messages
     }
+
+    this.props.socket.on('new message', function(data) {
+      console.log('got emit');
+      var newMessage = {
+        user: data.user,
+        text: data.text,
+        id: this.state.messages.length
+      };
+      this.state.messages.push(newMessage);
+      this.props.updateChat();
+    }.bind(this));
+
   }
 
   chatSubmit(event) {
@@ -18,24 +31,23 @@ class ChatInput extends React.Component {
     });
 
     //test version until chat DB is up
-    var messageID;
     if(prevName !== this.state.name) {
-      messageID = appData.chats[appData.chats.length - 1].id + 1;
-      appData.chats.push({
-        id: messageID,
+      var announceNameChange = {
         user: prevName,
         text: 'I changed my name to \'' + this.state.name + '\''
-      });
+      };
+      this.props.socket.emit('new message', announceNameChange);
+      announceNameChange.id=this.state.messages.length;
+      this.state.messages.push(announceNameChange);
     }
 
-    messageID = appData.chats[appData.chats.length - 1].id + 1;
-    appData.chats.push({
-      id: messageID,
+    var newMessage = {
       user: this.state.name,
       text: messageText
-    });
-    // end test code
-
+    };
+    this.props.socket.emit('new message', newMessage);
+    newMessage.id=this.state.messages.length;
+    this.state.messages.push(newMessage);
     this.props.updateChat();
   }
 
@@ -79,7 +91,7 @@ class Chat extends React.Component {
     super(props);
 
     this.state = {
-      messages: appData.chats,
+      messages: [],
       anonName: this.genAnonName()
     }
   }
@@ -93,14 +105,13 @@ class Chat extends React.Component {
   }
 
   updateChat() {
-    this.setState({
-      messages: appData.chats
-    });
+    this.forceUpdate();
   }
 
   render() {
     var chats = [];
     _.each(this.state.messages, function(message) {
+      console.log(message);
       chats.push(<ChatMessage message={message} key={message.id}/>);
     })
 
@@ -113,7 +124,7 @@ class Chat extends React.Component {
             <div id='textBody'>{chats}</div>
           </div>
           <div id='chatPanFtr' className='panel-footer'>
-            <ChatInput name={this.state.anonName} updateChat={this.updateChat.bind(this)}/>
+            <ChatInput messages={this.state.messages} name={this.state.anonName} updateChat={this.updateChat.bind(this)} socket={this.props.socket}/>
           </div>
         </div>
       </div>

@@ -105,12 +105,36 @@ var removeVideo = function(video, cb) {
       console.log('error on removeVideo', err);
       cb(err);
     }
-  })
+  });
+};
+
+var vote = function(vote, video, cb) {
+  if (!cb) {
+    var cb = function(err, val) {
+      console.log('error:', err);
+      console.log('response:', val);
+    }
+  }
+
+  $.ajax({
+    method: 'PUT',
+    url: '/api/url/' + video.id,
+    data: vote,
+    success: function(response) {
+      console.log('response on removeVideo', JSON.stringify(response));
+      cb(null, response);
+    },
+    error: function(err) {
+      console.log('error on removeVideo', err);
+      cb(err);
+    }
+  });
 };
 
 
 window.apiHelper = {
   getVideos: getVideos,
   postVideo: postVideo,
-  removeVideo: removeVideo
+  removeVideo: removeVideo,
+  vote: vote
 };
