@@ -29,12 +29,7 @@ class App extends React.Component {
             </div>
 
             <div className="row">
-              <div className="panel panel-default">
-                <div id="queueHead" className="panel-heading">Queue</div>
-                <div className="panel-body">
-                  <Queue ref="queue" startVideo={this.startVideo.bind(this)}/>
-                </div>
-              </div>
+              <Queue ref="queue" startVideo={this.startVideo.bind(this)}/>
             </div>
           </div>
 
