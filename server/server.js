@@ -36,6 +36,11 @@ io.on('connection', function (socket) {
       masterClient.splice(masterClient.indexOf(socket.id), 1);
     }
   });
+
+  socket.on('new message', function (data) {
+    // we tell the client to execute 'new message'
+    socket.broadcast.emit('new message', data);
+  });
 });
 
 
