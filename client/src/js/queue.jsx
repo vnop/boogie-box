@@ -150,6 +150,10 @@ class Queue extends React.Component {
     };
 
     this.updateQueue();
+
+    this.props.socket.on('queueChange', function(){
+      this.updateQueue();
+    }.bind(this));
   }
 
   updateQueue() {

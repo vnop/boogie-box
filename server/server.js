@@ -11,8 +11,10 @@ var server = app.listen(port, function () {
 var io = socket(server);
 
 app.use(function (req, res, next) {
-  console.log('i am here');
-  io.emit('queueChange', {change: true});
+  if(req.method !== 'GET') {
+    console.log('i am here');
+    io.emit('queueChange', {change: true});
+  }
 });
 
 var masterTime = 0;
