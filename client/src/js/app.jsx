@@ -7,6 +7,14 @@ class App extends React.Component {
     this.refs.queue.updateQueue();
   }
 
+  advanceQueue() {
+    return this.refs.queue.advanceQueue();
+  }
+
+  startVideo() {
+    this.refs.player.startVideo();
+  }
+
   render() {
     return (
       <div id="app" className="container">
@@ -28,14 +36,14 @@ class App extends React.Component {
         <div className="row">
           <div className="col-md-7">
             <div className="row">
-              <Video socket={this.props.socket} adminFlag={this.props.adminFlag}/>
+              <Video advanceQueue={this.advanceQueue.bind(this)} socket={this.props.socket} adminFlag={this.props.adminFlag} video={null} ref="player"/>
             </div>
 
             <div className="row">
               <div className="panel panel-default">
                 <div id="queueHead" className="panel-heading">Queue</div>
                 <div className="panel-body">
-                  <Queue ref="queue"/>
+                  <Queue ref="queue" startVideo={this.startVideo.bind(this)}/>
                 </div>
               </div>
             </div>

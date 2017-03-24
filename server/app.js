@@ -7,7 +7,6 @@ var url = require('url');
 var request = require('request');
 var config = require('./config');
 
-
 var app = express();
 
 app.use(express.static(path.join(__dirname, '../client')));
@@ -49,7 +48,6 @@ app.post('/api/url', function(req, res) {
       });
     });
   }
-
 });
 
 app.put('/api/url/:id', function (req, res) {

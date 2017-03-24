@@ -8,8 +8,13 @@ body {
   font-weight: bolder;
 }
 
+#useSyncBtn {
+  float: right;
+}
+
 #hideVidBtn {
   float: right;
+  padding-left: 5px;
 }
 
 #allCtrls {
