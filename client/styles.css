@@ -60,19 +60,13 @@ body {
 #qPanelBody {
   margin-top: auto;
   overflow: auto;
-<<<<<<< HEAD
   overflow-x: hidden;
-=======
->>>>>>> 5438d9eff4af31ba3ec35c0c1409d3ee8f5f0bee
   position: relative;
   height: 278px;
 }
 #qTextBody {
   overflow: auto;
-<<<<<<< HEAD
   overflow-x: hidden;
-=======
->>>>>>> 5438d9eff4af31ba3ec35c0c1409d3ee8f5f0bee
   max-height: 100%;
   width: 660px;
   position: absolute;
@@ -80,13 +74,8 @@ body {
 }
 #qEntry {
   max-width: 640px;
-<<<<<<< HEAD
   border-bottom-style: solid;
   border-bottom-width: 2px;
-=======
-  border-top-style: solid;
-  border-top-width: 2px;
->>>>>>> 5438d9eff4af31ba3ec35c0c1409d3ee8f5f0bee
 }
 #vidInQ {
   max-width: 450px;

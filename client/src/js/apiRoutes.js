@@ -108,6 +108,34 @@ var removeVideo = function(video, cb) {
   })
 };
 
+// var changeVotes = function(video, cb) {
+//   if (!cb) {
+//     var cb = function(err, val) {
+//       console.log('error:', err);
+//       console.log('response:', val);
+//     }
+//   }
+
+//   var newVotes = {
+//     upVote: video.upVote,
+//     downVote: video.downVote
+//   };
+
+//   $.ajax({
+//     method: 'PUT',
+//     url: '/api/url/' + video.id,
+//     data: newVotes,
+//     success: function(response) {
+//       console.log('response on updateVotes', JSON.stringify(response));
+//       cb(null, response);
+//     },
+//     error: function(err) {
+//       console.log('error on updateVotes', err);
+//       cb(err);
+//     }
+//   });
+// };
+
 
 window.apiHelper = {
   getVideos: getVideos,
