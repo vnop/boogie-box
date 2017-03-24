@@ -65,10 +65,8 @@ class QueueElement extends React.Component {
   vote(type) {
     if(!(this.props.votedOn[this.props.video.id])) {
       if (type === 'up') {
-        console.log('UPVOTE!!!!!!!!');
         apiHelper.vote({upVote: true}, this.props.video);
       } else if (type === 'down') {
-        console.log('DOWNVOTE!!!!!!!!');
         apiHelper.vote({downVote: true}, this.props.video);
       }
       this.props.votedOn[this.props.video.id] = type;
