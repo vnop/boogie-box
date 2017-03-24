@@ -3,10 +3,6 @@ class App extends React.Component {
     super(props);
   }
 
-  updateQueue() {
-    this.refs.queue.updateQueue();
-  }
-
   advanceQueue() {
     return this.refs.queue.advanceQueue();
   }
@@ -14,22 +10,15 @@ class App extends React.Component {
   startVideo() {
     this.refs.player.startVideo();
   }
-
   render() {
     return (
       <div id="app" className="container">
         <div className="row">
           <div className="col-md-12">
-            <div className="jumbostron text-center" id="titleText">
+            <div id="titleText" className="jumbostron text-center">
               <h1>Boogie-Box</h1>
               <p>it's boogie time</p>
             </div>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-md-12">
-            <Add updateQueue={this.updateQueue.bind(this)}/>
           </div>
         </div>
 
@@ -40,24 +29,14 @@ class App extends React.Component {
             </div>
 
             <div className="row">
-              <div className="panel panel-default">
-                <div id="queueHead" className="panel-heading">Queue</div>
-                <div className="panel-body">
-                  <Queue ref="queue" startVideo={this.startVideo.bind(this)}/>
-                </div>
-              </div>
+              <Queue ref="queue" startVideo={this.startVideo.bind(this)}/>
             </div>
           </div>
 
           <div className="col-md-5">
-            <div id='chatPan' className="panel panel-info">
-              <div id="chatTitle" className="panel-heading">Boogie-Chat</div>
-              <div className="panel-body">
-                <Chat/>
-              </div>
-            </div>
-
+            <Chat/>
           </div>
+
         </div>
       </div>
     )

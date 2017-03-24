@@ -21,25 +21,53 @@ class Video extends React.Component {
       loaded: 0,
       duration: 0,
       progress: 0,
-      serverTime: 0,
+      serverData: 0,
       playbackRate: 1.0,
       useSync: true,
-      adminFlag: this.props.adminFlag
+      adminFlag: this.props.adminFlag,
+      initializedSync: false
     };
 
     this.props.socket.on('recTime', function (data) {
       console.log(`data --> ${JSON.stringify(data)}`);
       this.setState({
-        serverTime: data.time
+        serverData: data.time
       });
+
+      this.verifySync();
+
+      // if(!this.state.playing) {
+      //   this.playPause();
+      // }
+
+      // if(!this.state.adminFlag && !this.state.initializedSync) {
+      //   console.log('changing stuff *****************************************');
+      //   this.player.seekTo(this.state.serverData.progress);
+      //   this.setState({
+      //     video: this.state.serverData.video,
+      //     url: this.state.serverData.video.videourl,
+      //     progress: this.state.serverData.progress,
+      //     playing: this.state.serverData.playing,
+      //     initializedSync: true
+      //   });
+      // }
     }.bind(this));
 
     this.props.socket.on('setAdminFlag', function (data) {
       console.log('adminFlag set to: ', data);
       this.setState({
         adminFlag: true
-      })
+      });
+
+      if(this.state.adminFlag && !this.state.initializedSync) {
+        this.setState({
+          initializedSync: true
+        });
+        this.startVideo();
+      }
     }.bind(this));
+
+    this.emitData();
   }
 
   //Audio Controllers
@@ -65,50 +93,85 @@ class Video extends React.Component {
   }
 
   toggleSync() {
-    this.setState({ useSync: !this.state.useSync })
+    this.setState({ useSync: !this.state.useSync });
   }
-  verifySync(time) {
+
+  updateProgress(time) {
     this.setState({ progress: time.played });
-    var clientTime = Math.floor(this.state.progress*this.state.duration);
-    var serverTime = Math.floor(this.state.serverTime*this.state.duration);
-    if (Math.abs(clientTime - serverTime) >= 4 && !this.state.adminFlag && this.state.useSync) {
-      this.player.seekTo(this.state.serverTime);
-      this.setState({
-        progress: this.state.serverTime
-      });
-    }
-    if (this.state.adminFlag) {
-      this.props.socket.emit('setTime', {time: this.state.progress});
+  }
+
+  verifySync() {
+    if (!this.state.adminFlag && this.state.useSync) {
+      var clientTime = Math.floor(this.state.progress*this.state.duration);
+      var serverTime = Math.floor(this.state.serverData.progress*this.state.duration);
+      if (Math.abs(clientTime - serverTime) >= 4) {
+        this.player.seekTo(this.state.serverData.progress);
+        this.setState({
+          progress: this.state.serverData.progress
+        });
+      }
+      if (this.state.playing !== this.state.serverData.playing) {
+        this.playPause();
+      }
+      if (this.state.video && this.state.serverData.video) {
+        if (this.state.video.id !== this.state.serverData.video.id) {
+          this.setState({
+            video: this.state.serverData.video,
+            url: this.state.serverData.video.videourl
+          });
+        }
+      } else if (!this.state.video && this.state.serverData.video) {
+        this.setState({
+          video: this.state.serverData.video,
+          url: this.state.serverData.video.videourl
+        });
+      }
     }
   }
 
+  emitData() {
+    if (this.state.adminFlag) {
+      var playerData = {
+        progress: this.state.progress,
+        video: this.state.video,
+        playing: this.state.playing
+      };
+      console.log('playerData ----->', playerData);
+      this.props.socket.emit('setTime', {time: playerData});
+    }
+
+    setTimeout(this.emitData.bind(this), 1000);
+  }
+
   startVideo() {
-    if(this.state.video === null && this.state.url === null) {
+    if(this.state.adminFlag && this.state.video === null && this.state.url === null) {
       this.onVideoEnd();
     }
   }
 
   onVideoEnd() {
-    var newVid = this.props.advanceQueue();
+    if (this.state.adminFlag) {
+      var newVid = this.props.advanceQueue();
 
-    this.setState({
-      url: ''
-    });
-
-    if (newVid) {
-      console.log ('new video', newVid)
       this.setState({
-        video: newVid,
-        url: newVid.videourl,
-        progress: 0
+        url: ''
       });
-    } else {
-      console.log('no new vid');
-      this.setState({
-        video: null,
-        url: null,
-        progress: 0
-      })
+
+      if (newVid) {
+        console.log ('new video', newVid)
+        this.setState({
+          video: newVid,
+          url: newVid.videourl,
+          progress: 0
+        });
+      } else {
+        console.log('no new vid');
+        this.setState({
+          video: null,
+          url: null,
+          progress: 0
+        });
+      }
     }
   }
 
@@ -118,7 +181,7 @@ class Video extends React.Component {
         <div id='plyrPnlHeading' className="panel-heading">
           <div id='hideVidBtn' data-toggle='tooltip' title='Toggle video' onClick={this.toggleVideo.bind(this)}><span className={this.state.hideVid ? 'glyphicon glyphicon-eye-close' : 'glyphicon glyphicon-eye-open'}></span></div>
           <div id='useSyncBtn' data-toggle='tooltip' title='Toggle sync' onClick={this.toggleSync.bind(this)}><span className={this.state.useSync ? 'glyphicon glyphicon-transfer' : 'glyphicon glyphicon-headphones'}></span></div>
-          <div id='audioTitle'>Song Title</div>
+          <div id='audioTitle'>{(!this.state.video) ? 'Find a boogie!' : this.state.video.title}</div>
         </div>
 
         <div className="panel-body">
@@ -134,8 +197,9 @@ class Video extends React.Component {
                 onPlay={() => this.setState({ playing: true }) }
                 onPause={() => this.setState({ playing: false}) }
                 onEnded={this.onVideoEnd.bind(this)}
+                onError={this.onVideoEnd.bind(this)}
                 onDuration={duration => this.setState({ duration }) } //logs the overall video duration
-                onProgress={this.verifySync.bind(this)}
+                onProgress={this.updateProgress.bind(this)}
               />
             </div>
           </div>
@@ -180,7 +244,7 @@ class Video extends React.Component {
 
 //appData for sharing between, mostly for tests before our database hook up
 window.appData = {
-  currentUrl: 'https://www.youtube.com/watch?v=UbQgXeY_zi4',
+  currentUrl: 'https://www.youtube.com/watch?v=KTvfwd3JZTE',
   currentTime: 0,
   chats: [
     {id: 0, user: 'Phteven', text: 'This is a message!'},

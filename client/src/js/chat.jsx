@@ -47,10 +47,10 @@ class ChatInput extends React.Component {
 
   render() {
     return (
-      <form onSubmit={this.chatSubmit.bind(this)}>
-        <input type="text" ref="nameInput" value={this.state.name} onChange={this.changeName.bind(this)}></input>
-        <input type="text" ref="messageInput"></input>
-        <button type="submit">Send</button>
+      <form id='allChatInputs' onSubmit={this.chatSubmit.bind(this)}>
+        <input id='userIdBox' type='text' ref='nameInput' value={this.state.name} onChange={this.changeName.bind(this)}></input>
+        <input id='chatInputBox' type='text' ref='messageInput'></input>
+        <button id='chatSubmitBtn' className='btn btn-sm btn-default' type='submit'>Send</button>
       </form>
     );
   }
@@ -64,9 +64,9 @@ class ChatMessage extends React.Component {
   render() {
 
     return (
-      <div className="chatMessage">
-        <span className="chatMessageUser"> {this.props.message.user}: </span>
-        <span className="chatMessageText"> {this.props.message.text} </span>
+      <div className='chatMessage'>
+        <span className='chatMessageUser' className='label label-primary'>{this.props.message.user}:</span>
+        <span className='chatMessageText'> {this.props.message.text} </span>
       </div>
     );
   }
@@ -107,9 +107,14 @@ class Chat extends React.Component {
 
     return (
       <div className="chatBox">
-        {chats}
-        <div>
-          <ChatInput name={this.state.anonName} updateChat={this.updateChat.bind(this)}/>
+        <div id='chatPanel' className='panel panel-info'>
+          <div id='chatTitle' className='panel-heading'>Boogie-Chat</div>
+          <div id='chatPanBody' className='panel-body'>
+            <div id='textBody'>{chats}</div>
+          </div>
+          <div id='chatPanFtr' className='panel-footer'>
+            <ChatInput name={this.state.anonName} updateChat={this.updateChat.bind(this)}/>
+          </div>
         </div>
       </div>
     )
