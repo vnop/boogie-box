@@ -21,7 +21,7 @@ class Video extends React.Component {
       loaded: 0,
       duration: 0,
       progress: 0,
-      serverTime: 0,
+      serverData: 0,
       playbackRate: 1.0,
       useSync: true,
       adminFlag: this.props.adminFlag,
@@ -34,15 +34,23 @@ class Video extends React.Component {
         serverData: data.time
       });
 
-      if(!this.state.adminFlag && !this.state.initializedSync) {
-        this.setState({
-          video: this.state.serverData.video,
-          url: this.state.serverData.video.videourl,
-          progress: this.state.serverData.progress,
-          playing: this.state.serverData.playing,
-          initializedSync: true
-        });
-      }
+      this.verifySync();
+
+      // if(!this.state.playing) {
+      //   this.playPause();
+      // }
+
+      // if(!this.state.adminFlag && !this.state.initializedSync) {
+      //   console.log('changing stuff *****************************************');
+      //   this.player.seekTo(this.state.serverData.progress);
+      //   this.setState({
+      //     video: this.state.serverData.video,
+      //     url: this.state.serverData.video.videourl,
+      //     progress: this.state.serverData.progress,
+      //     playing: this.state.serverData.playing,
+      //     initializedSync: true
+      //   });
+      // }
     }.bind(this));
 
     this.props.socket.on('setAdminFlag', function (data) {
@@ -58,6 +66,8 @@ class Video extends React.Component {
         this.startVideo();
       }
     }.bind(this));
+
+    this.emitData();
   }
 
   //Audio Controllers
@@ -85,37 +95,52 @@ class Video extends React.Component {
   toggleSync() {
     this.setState({ useSync: !this.state.useSync });
   }
-  verifySync(time) {
+
+  updateProgress(time) {
     this.setState({ progress: time.played });
-    var clientTime = Math.floor(this.state.progress*this.state.duration);
-    var serverTime = Math.floor(this.state.serverData.progress*this.state.duration);
+  }
+
+  verifySync() {
     if (!this.state.adminFlag && this.state.useSync) {
+      var clientTime = Math.floor(this.state.progress*this.state.duration);
+      var serverTime = Math.floor(this.state.serverData.progress*this.state.duration);
       if (Math.abs(clientTime - serverTime) >= 4) {
-        this.player.seekTo(this.state.serverTime);
+        this.player.seekTo(this.state.serverData.progress);
         this.setState({
           progress: this.state.serverData.progress
         });
       }
       if (this.state.playing !== this.state.serverData.playing) {
-        this.setState({
-          playing: this.serverData.playing
-        });
+        this.playPause();
       }
-      if (this.state.video.id !== this.state.serverData.video.id) {
+      if (this.state.video && this.state.serverData.video) {
+        if (this.state.video.id !== this.state.serverData.video.id) {
+          this.setState({
+            video: this.state.serverData.video,
+            url: this.state.serverData.video.videourl
+          });
+        }
+      } else if (!this.state.video && this.state.serverData.video) {
         this.setState({
           video: this.state.serverData.video,
           url: this.state.serverData.video.videourl
         });
       }
     }
+  }
+
+  emitData() {
     if (this.state.adminFlag) {
       var playerData = {
         progress: this.state.progress,
         video: this.state.video,
         playing: this.state.playing
       };
+      console.log('playerData ----->', playerData);
       this.props.socket.emit('setTime', {time: playerData});
     }
+
+    setTimeout(this.emitData.bind(this), 1000);
   }
 
   startVideo() {
@@ -174,7 +199,7 @@ class Video extends React.Component {
                 onEnded={this.onVideoEnd.bind(this)}
                 onError={this.onVideoEnd.bind(this)}
                 onDuration={duration => this.setState({ duration }) } //logs the overall video duration
-                onProgress={this.verifySync.bind(this)}
+                onProgress={this.updateProgress.bind(this)}
               />
             </div>
           </div>
