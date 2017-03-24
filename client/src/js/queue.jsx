@@ -67,12 +67,14 @@ class QueueElement extends React.Component {
 
   voteUp() {
     if(this.state.upVoted) {
+      console.log('CHECK OUT THESE VOTES', this.props.video.upVote);
       this.setState({
         upVote: this.state.upVote - 1,
         upVoted: false,
         upStyle: {}
       });
     } else if (this.state.downVoted) {
+      console.log('CHECK OUT THESE VOTES', this.props.video.upVote);
       this.setState({
         upVote: this.state.upVote + 1,
         upVoted: true,
@@ -82,6 +84,7 @@ class QueueElement extends React.Component {
         downStyle: {}
       });
     } else {
+      console.log('CHECK OUT THESE VOTES', this.props.video.upVote);
       this.setState({
         upVote: this.state.upVote + 1,
         upVoted: true,
@@ -159,7 +162,6 @@ class Queue extends React.Component {
         console.log('Error on retrieving videos', err);
       } else {
         var hasVideos = data.length > 0;
-
         this.setState({
           videoList: data,
           hasVideos: hasVideos

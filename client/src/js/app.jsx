@@ -34,7 +34,7 @@ class App extends React.Component {
           </div>
 
           <div className="col-md-5">
-            <Chat/>
+            <Chat />
           </div>
 
         </div>
