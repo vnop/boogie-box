@@ -7,7 +7,13 @@ var port = config.port;
 var server = app.listen(port, function () {
   console.log('We got the boogie on port', port);
 });
+
 var io = socket(server);
+
+app.use(function (req, res, next) {
+  console.log('i am here');
+  io.emit('queueChange', {change: true});
+});
 
 var masterTime = 0;
 var masterClient = [];
