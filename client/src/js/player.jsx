@@ -29,7 +29,7 @@ class Video extends React.Component {
     };
 
     this.props.socket.on('recTime', function (data) {
-      console.log(`data --> ${JSON.stringify(data)}`);
+      // console.log(`data --> ${JSON.stringify(data)}`);
       this.setState({
         serverData: data.time
       });
@@ -78,7 +78,18 @@ class Video extends React.Component {
     if (this.state.url) {
       this.setState({ playing: !this.state.playing });
     } else {
-      this.setState({ url: this.state.video.videourl, playing: true });
+      if (!this.state.video && this.state.serverData.video) {
+        this.setState({
+          video: this.state.serverData.video,
+          url: this.state.serverData.video.videourl,
+          playing: true
+        });
+      } else {
+        this.setState({
+          url: this.state.video.videourl,
+          playing: true
+        });
+      }
     }
   }
   mute() {
@@ -136,7 +147,7 @@ class Video extends React.Component {
         video: this.state.video,
         playing: this.state.playing
       };
-      console.log('playerData ----->', playerData);
+      // console.log('playerData ----->', playerData);
       this.props.socket.emit('setTime', {time: playerData});
     }
 
