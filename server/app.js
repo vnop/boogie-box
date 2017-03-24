@@ -19,10 +19,9 @@ app.get('/api/url', function(req, res) {
     console.log(`urls ${JSON.stringify(urls)}`);
     res.send(urls);
   });
-
 });
 
-app.post('/api/url', function(req, res) {
+app.post('/api/url', function(req, res, next) {
   var queryData = url.parse(req.body.videourl, true).query;
 
   if (queryData && queryData.v) {
@@ -45,12 +44,13 @@ app.post('/api/url', function(req, res) {
       }).then(function() {
         console.log(`req body ${JSON.stringify(req.body)}`);
         res.send('done');
+        next();
       });
     });
   }
 });
 
-app.put('/api/url/:id', function (req, res) {
+app.put('/api/url/:id', function (req, res, next) {
   // send -> '/api/url/upvote/_id'
   // send -> '/api/url/downvote/_id'
 
@@ -59,22 +59,60 @@ app.put('/api/url/:id', function (req, res) {
   var id = req.params.id;
 
   if ((req.body).hasOwnProperty('upVote') || (req.body).hasOwnProperty('downVote')) {
-    VideoData.update(req.body, {
+
+    VideoData.findAll({
       where: {
-        id: id,
+        id: id
+      }
+    }).then(function(url) {
+      var newValue;
+
+      if ((req.body).hasOwnProperty('upVote')) {
+        newValue = url[0].dataValues.upVote + 1;
+
+        VideoData.update({
+          upVote: newValue
+        }, {
+          where: {
+            id: id,
+          }
+        });
+
+        res.send('updated for id ' + id);
+        next();
+      } else if ((req.body).hasOwnProperty('downVote')) {
+        newValue = url[0].dataValues.downVote + 1;
+
+        VideoData.update({
+          downVote: newValue
+        }, {
+          where: {
+            id: id,
+          }
+        });
+
+        res.send('updated for id ' + id);
+        next();
       }
     });
-
-    res.send('updated for id ' + id);
   } else {
     res.send('error');
   }
 });
 
-app.delete('/api/url/:id', function(req, res) {
+app.delete('/api/url/:id', function(req, res, next) {
   VideoData.destroy({ where : {id: req.params.id} }).then(function () {
+    console.log('deleted done');
     res.send('deleted successfully');
+    next();
   });
 });
 
 module.exports = app;
+
+
+
+
+    // this.props.socket.on('queueChange', function (data) {
+    //   console.log('queueChange: ', data);
+    // });
