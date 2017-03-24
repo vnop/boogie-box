@@ -24,21 +24,39 @@ class Video extends React.Component {
       serverTime: 0,
       playbackRate: 1.0,
       useSync: true,
-      adminFlag: this.props.adminFlag
+      adminFlag: this.props.adminFlag,
+      initializedSync: false
     };
 
     this.props.socket.on('recTime', function (data) {
       console.log(`data --> ${JSON.stringify(data)}`);
       this.setState({
-        serverTime: data.time
+        serverData: data.time
       });
+
+      if(!this.state.adminFlag && !this.state.initializedSync) {
+        this.setState({
+          video: this.state.serverData.video,
+          url: this.state.serverData.video.videourl,
+          progress: this.state.serverData.progress,
+          playing: this.state.serverData.playing,
+          initializedSync: true
+        });
+      }
     }.bind(this));
 
     this.props.socket.on('setAdminFlag', function (data) {
       console.log('adminFlag set to: ', data);
       this.setState({
         adminFlag: true
-      })
+      });
+
+      if(this.state.adminFlag && !this.state.initializedSync) {
+        this.setState({
+          initializedSync: true
+        });
+        this.startVideo();
+      }
     }.bind(this));
   }
 
@@ -70,45 +88,65 @@ class Video extends React.Component {
   verifySync(time) {
     this.setState({ progress: time.played });
     var clientTime = Math.floor(this.state.progress*this.state.duration);
-    var serverTime = Math.floor(this.state.serverTime*this.state.duration);
-    if (Math.abs(clientTime - serverTime) >= 4 && !this.state.adminFlag && this.state.useSync) {
-      this.player.seekTo(this.state.serverTime);
-      this.setState({
-        progress: this.state.serverTime
-      });
+    var serverTime = Math.floor(this.state.serverData.progress*this.state.duration);
+    if (!this.state.adminFlag && this.state.useSync) {
+      if (Math.abs(clientTime - serverTime) >= 4) {
+        this.player.seekTo(this.state.serverTime);
+        this.setState({
+          progress: this.state.serverData.progress
+        });
+      }
+      if (this.state.playing !== this.state.serverData.playing) {
+        this.setState({
+          playing: this.serverData.playing
+        });
+      }
+      if (this.state.video.id !== this.state.serverData.video.id) {
+        this.setState({
+          video: this.state.serverData.video,
+          url: this.state.serverData.video.videourl
+        });
+      }
     }
     if (this.state.adminFlag) {
-      this.props.socket.emit('setTime', {time: this.state.progress});
+      var playerData = {
+        progress: this.state.progress,
+        video: this.state.video,
+        playing: this.state.playing
+      };
+      this.props.socket.emit('setTime', {time: playerData});
     }
   }
 
   startVideo() {
-    if(this.state.video === null && this.state.url === null) {
+    if(this.state.adminFlag && this.state.video === null && this.state.url === null) {
       this.onVideoEnd();
     }
   }
 
   onVideoEnd() {
-    var newVid = this.props.advanceQueue();
+    if (this.state.adminFlag) {
+      var newVid = this.props.advanceQueue();
 
-    this.setState({
-      url: ''
-    });
-
-    if (newVid) {
-      console.log ('new video', newVid)
       this.setState({
-        video: newVid,
-        url: newVid.videourl,
-        progress: 0
+        url: ''
       });
-    } else {
-      console.log('no new vid');
-      this.setState({
-        video: null,
-        url: null,
-        progress: 0
-      })
+
+      if (newVid) {
+        console.log ('new video', newVid)
+        this.setState({
+          video: newVid,
+          url: newVid.videourl,
+          progress: 0
+        });
+      } else {
+        console.log('no new vid');
+        this.setState({
+          video: null,
+          url: null,
+          progress: 0
+        });
+      }
     }
   }
 
