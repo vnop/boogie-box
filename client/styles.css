@@ -60,13 +60,11 @@ body {
 #qPanelBody {
   margin-top: auto;
   overflow: auto;
-  overflow-x: hidden;
   position: relative;
   height: 278px;
 }
 #qTextBody {
   overflow: auto;
-  overflow-x: hidden;
   max-height: 100%;
   width: 660px;
   position: absolute;
@@ -74,8 +72,8 @@ body {
 }
 #qEntry {
   max-width: 640px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
+  border-top-style: solid;
+  border-top-width: 2px;
 }
 #vidInQ {
   max-width: 450px;

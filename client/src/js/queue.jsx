@@ -56,17 +56,75 @@ class QueueElement extends React.Component {
     super(props);
 
     this.state = {
+      // upVote: this.props.video.upVote,
+      // downVote: this.props.video.downVote,
       downVoted: false,
       upVoted: false,
       downStyle: {},
       upStyle: {}
     };
 
+    console.log('voted on for', this.props.key, 'is', this.props.votedOn);
+  }
+
+
+  // voteUp() {
+  //   if(this.state.upVoted) {
+  //     this.setState({
+  //       upVote: this.state.upVote - 1,
+  //       upVoted: false,
+  //       upStyle: {}
+  //     });
+  //   } else if (this.state.downVoted) {
+  //     this.setState({
+  //       upVote: this.state.upVote + 1,
+  //       upVoted: true,
+  //       upStyle: {border: '2px solid green'},
+  //       downVote: this.state.downVote - 1,
+  //       downVoted: false,
+  //       downStyle: {}
+  //     });
+  //   } else {
+  //     this.setState({
+  //       upVote: this.state.upVote + 1,
+  //       upVoted: true,
+  //       upStyle: {border: '2px solid green'}
+  //     });
+  //   }
+  // }
+
+  // voteDown() {
+  //   if(this.state.downVoted) {
+  //     this.setState({
+  //       downVote: this.state.downVote - 1,
+  //       downVoted: false,
+  //       downStyle: {}
+  //     });
+  //   } else if (this.state.upVoted) {
+  //     this.setState({
+  //       downVote: this.state.downVote + 1,
+  //       downVoted: true,
+  //       downStyle:  {border: '2px solid red'},
+  //       upVote: this.state.upVote - 1,
+  //       upVoted: false,
+  //       upStyle: {}
+  //     });
+  //   } else {
+  //     this.setState({
+  //       downVote: this.state.downVote + 1,
+  //       downVoted: true,
+  //       downStyle: {border: '2px solid red'}
+  //     });
+  //   }
+  // }
+
   vote(type) {
     if(!(this.props.votedOn[this.props.video.id])) {
       if (type === 'up') {
+        console.log('UPVOTE!!!!!!!!');
         apiHelper.vote({upVote: true}, this.props.video);
       } else if (type === 'down') {
+        console.log('DOWNVOTE!!!!!!!!');
         apiHelper.vote({downVote: true}, this.props.video);
       }
       this.props.votedOn[this.props.video.id] = type;
@@ -122,12 +180,14 @@ class Queue extends React.Component {
         console.log('Error on retrieving videos', err);
       } else {
         var hasVideos = data.length > 0;
+
         data.sort(function(a, b) {
           var bScore = b.upVote - b.downVote;
           var aScore = a.upVote - a.downVote;
 
           return bScore - aScore;
         });
+
         this.setState({
           videoList: data,
           hasVideos: hasVideos
@@ -165,6 +225,7 @@ class Queue extends React.Component {
     var queueElements = [];
     var votedOn = this.state.votedOn;
     _.each(this.state.videoList, function(video) {
+      console.log('VIDEOOOOOOOOOOOOOOO', video);
       queueElements.push(<QueueElement video={video} votedOn={votedOn} key={video.id}/>);
     });
 
