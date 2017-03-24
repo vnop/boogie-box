@@ -29,7 +29,7 @@ class App extends React.Component {
             </div>
 
             <div className="row">
-              <Queue ref="queue" startVideo={this.startVideo.bind(this)}/>
+              <Queue socket={this.props.socket} ref="queue" startVideo={this.startVideo.bind(this)}/>
             </div>
           </div>
 
