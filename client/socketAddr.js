@@ -1,1 +1,0 @@
-window.socketAddr = "localhost:8082";
