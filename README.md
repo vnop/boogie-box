@@ -1,2 +1,55 @@
-# boogie-box
-A jukebox-like app for live sharing and listening to music in sync
+# Boogie-Box
+
+> Everyone and anyone who loves tasty jams, and sharing those scrumptous beats with friends.
+
+## Team
+
+  - __Product Owner__: Seán Michael Ellison-Chen
+  - __Scrum Master__: Alex David Moores
+  - __Development Team Members AKA Dream-Makers__: Mohammad Farooqi, Faiz Mohammed
+
+## Table of Contents
+
+1. [Usage](#Usage)
+1. [Requirements](#requirements)
+1. [Development](#development)
+    1. [Installing Dependencies](#installing-dependencies)
+    1. [Tasks](#tasks)
+1. [Team](#team)
+1. [Contributing](#contributing)
+
+## Usage
+
+> 1.) npm install
+> 2.) bower install
+> 3.) grunt (not literally, but the task runner I mean)
+
+## Requirements
+
+- Node
+- npm
+- bower
+- grunt
+- sqlite3
+
+## Development
+
+### Installing Dependencies
+
+From within the root directory:
+
+```sh
+sudo npm install -g bower
+npm install
+bower install
+grunt (again, not literally. Not like the verb or anything. You know what I mean? I mean the taskrunner. It's a pretty cool thing that lets us run multiple tasks in one go. Wouldn't it be silly if we were literally grunting though? I mean like, can you even imagine? That'd be pretty funny, right? Good stuff. My uncle had a very distinctive grunt. You could hear it from a mile away. Well, not like a literal mile. That's a little far for a grunt to be heard. But you could definitely hear it from across a room.)
+```
+
+### Roadmap
+
+View the project roadmap [here](https://waffle.io/remote-control-pigeon/boogie-box)
+
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
