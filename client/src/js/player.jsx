@@ -3,14 +3,15 @@
 class Video extends React.Component {
   constructor(props) {
     super(props);
-    //default audio states
 
+    //if a video is not loaded, the url variable will be null. Otherwise, url will be set to the loaded video's url
     if (!this.props.video) {
       var url = null;
     } else {
       var url = this.props.video.videourl;
     }
-    this.state = {
+
+    this.state = {//default audio states
       video: this.props.video,
       url: url,
       hideVid: false,
