@@ -7,6 +7,9 @@ class Add extends React.Component {
     };
   }
 
+
+  // Pulls input info from the add box in the queue, and pushes
+  // a url to the serverside for DB tracking if the url is valid
   urlSubmit(event) {
     event.preventDefault();
     var inputVal = this.refs.addUrlField.value;
@@ -20,19 +23,20 @@ class Add extends React.Component {
       }.bind(this));
       this.refs.addUrlField.value = '';
     } else {
-      console.log('Not a valid youtube link');
       this.refs.addUrlField.style = 'outline: 1px solid red';
       this.setState({
         error: 'Please input a valid Youtube URL'
       });
     }
-    console.log('currentUrl', appData.currentUrl);
   }
 
+  // Dead simple youtube url validator. Back end uses more sophisticated
+  // API based validation, but this prunes most nonsense input
+  // off the bat.
   validYoutubeUrl(url) {
-    var url1 = 'youtube.com';
-
-    return url.indexOf(url1) !== -1 && url.indexOf('?v=') !== -1;
+    var necessaryString0 = 'youtube.com';
+    var necessaryString1 = '?v=';
+    return url.indexOf(necessaryString0) !== -1 && url.indexOf(necessaryString1) !== -1;
   }
 
   render() {
@@ -51,80 +55,30 @@ class Add extends React.Component {
   }
 };
 
+
+// React Component for rendering each element in the song queue
 class QueueElement extends React.Component {
   constructor(props) {
     super(props);
 
+    // These are mostly unused, but helpful for testing
+    // some functionalities if you so choose
     this.state = {
-      // upVote: this.props.video.upVote,
-      // downVote: this.props.video.downVote,
       downVoted: false,
       upVoted: false,
       downStyle: {},
       upStyle: {}
     };
-
-    console.log('voted on for', this.props.key, 'is', this.props.votedOn);
   }
 
 
-  // voteUp() {
-  //   if(this.state.upVoted) {
-  //     this.setState({
-  //       upVote: this.state.upVote - 1,
-  //       upVoted: false,
-  //       upStyle: {}
-  //     });
-  //   } else if (this.state.downVoted) {
-  //     this.setState({
-  //       upVote: this.state.upVote + 1,
-  //       upVoted: true,
-  //       upStyle: {border: '2px solid green'},
-  //       downVote: this.state.downVote - 1,
-  //       downVoted: false,
-  //       downStyle: {}
-  //     });
-  //   } else {
-  //     this.setState({
-  //       upVote: this.state.upVote + 1,
-  //       upVoted: true,
-  //       upStyle: {border: '2px solid green'}
-  //     });
-  //   }
-  // }
-
-  // voteDown() {
-  //   if(this.state.downVoted) {
-  //     this.setState({
-  //       downVote: this.state.downVote - 1,
-  //       downVoted: false,
-  //       downStyle: {}
-  //     });
-  //   } else if (this.state.upVoted) {
-  //     this.setState({
-  //       downVote: this.state.downVote + 1,
-  //       downVoted: true,
-  //       downStyle:  {border: '2px solid red'},
-  //       upVote: this.state.upVote - 1,
-  //       upVoted: false,
-  //       upStyle: {}
-  //     });
-  //   } else {
-  //     this.setState({
-  //       downVote: this.state.downVote + 1,
-  //       downVoted: true,
-  //       downStyle: {border: '2px solid red'}
-  //     });
-  //   }
-  // }
-
+  // Gets called on either an upvote or downvote, interacts
+  // with the server side to post that vote.
   vote(type) {
     if(!(this.props.votedOn[this.props.video.id])) {
       if (type === 'up') {
-        console.log('UPVOTE!!!!!!!!');
         apiHelper.vote({upVote: true}, this.props.video);
       } else if (type === 'down') {
-        console.log('DOWNVOTE!!!!!!!!');
         apiHelper.vote({downVote: true}, this.props.video);
       }
       this.props.votedOn[this.props.video.id] = type;
@@ -168,11 +122,20 @@ class Queue extends React.Component {
 
     this.updateQueue();
 
+    // This is what updates the queue every time you or another user
+    // causes any sort of change on the queue. This includes
+    // votes, additions, and subtractions.
     this.props.socket.on('queueChange', function(){
       this.updateQueue();
     }.bind(this));
   }
 
+
+  // Updates the queue with all video data, such that votes and
+  // songs are all consistently up to date for every user in the
+  // boogie box
+
+  // Note: this also sorts the output by vote score (i.e. up - down)
   updateQueue() {
     var hadVideos = this.state.hasVideos;
     var getVideosCallback = function(err, data) {
@@ -201,6 +164,11 @@ class Queue extends React.Component {
     apiHelper.getVideos(getVideosCallback.bind(this));
   }
 
+
+  // This method is responsible for advancing the queue whenever
+  // the current song is done playing. It removes the top song
+  // from the queue and returns it so the player can start
+  // playing that.
   advanceQueue() {
     if (this.state.hasVideos) {
       var newVid = this.state.videoList[0];
@@ -225,7 +193,6 @@ class Queue extends React.Component {
     var queueElements = [];
     var votedOn = this.state.votedOn;
     _.each(this.state.videoList, function(video) {
-      console.log('VIDEOOOOOOOOOOOOOOO', video);
       queueElements.push(<QueueElement video={video} votedOn={votedOn} key={video.id}/>);
     });
 
