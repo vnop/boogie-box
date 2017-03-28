@@ -3,15 +3,16 @@
 // is the value upon which to operate. If no error, call as
 // cb(null, val)
 
+// In any case, if a callback is not given, the default is just to
+// log the response and error to the console:
 
-// Gets the title of a video using its URL.
-// url: takes a video URL for the video in
-//      in question
-// cb: takes a callback that gets run on the
-//     new, returned title string
-var getVideoTitle = function(url, cb) {
-  return 'standin video title';
-};
+var defaultCallback = function(err, val) {
+  if (err) {
+    console.log('error:', err);
+  } else {
+    console.log('response:', val);
+  }
+}
 
 // Retrieves videos from DB via server connection
 //  cb: Takes a callback that gets run on the array
@@ -19,22 +20,17 @@ var getVideoTitle = function(url, cb) {
 var getVideos = function(cb) {
 
   if (!cb) {
-    var cb = function(err, val) {
-      console.log('error:', err);
-      console.log('response:', val);
-    }
+    var cb = defaultCallback;
   }
 
   $.ajax({
     method: 'GET',
     url: '/api/url',
     success: function(data) {
-      console.log('response on getVideos', JSON.stringify(data));
       cb(null, data);
     },
 
     error: function(err) {
-      console.log('error on getVideos', err);
       cb(err);
     }
   });
@@ -48,10 +44,7 @@ var getVideos = function(cb) {
 var postVideo = function(url, cb) {
 
   if (!cb) {
-    var cb = function(err, val) {
-      console.log('error:', err);
-      console.log('response:', val);
-    }
+    var cb = defaultCallback;
   }
 
   var video = {
@@ -88,10 +81,7 @@ var postVideo = function(url, cb) {
 var removeVideo = function(video, cb) {
 
   if (!cb) {
-    var cb = function(err, val) {
-      console.log('error:', err);
-      console.log('response:', val);
-    }
+    var cb = defaultCallback;
   }
 
   $.ajax({
@@ -108,12 +98,20 @@ var removeVideo = function(video, cb) {
   });
 };
 
+
+// Used for voting on queue elements
+// vote: takes an object to define the
+//       vote to be made. Options:
+//       {upVote: true}
+//       {downVote: true}
+// video: the video object on which
+//        the vote is being cast
+// cb: optional callback that gets run
+//     on the server's respopnse to the
+//     vote call
 var vote = function(vote, video, cb) {
   if (!cb) {
-    var cb = function(err, val) {
-      console.log('error:', err);
-      console.log('response:', val);
-    }
+    var cb = defaultCallback;
   }
 
   $.ajax({
@@ -131,6 +129,9 @@ var vote = function(vote, video, cb) {
   });
 };
 
+
+// Exports all the api helpers. use apiHelper.<method> to invoke any
+// function in this file.
 
 window.apiHelper = {
   getVideos: getVideos,

@@ -1,3 +1,5 @@
+
+// React component for handling the sending of new chats
 class ChatInput extends React.Component {
   constructor(props) {
     super(props);
@@ -7,8 +9,13 @@ class ChatInput extends React.Component {
       messages: this.props.messages
     }
 
+
+    // Handles receiving new messages from the socket
+    // Note: Only users who didn't send the message will
+    // receive this. The sender's client will track it
+    // for them sans socket to cut down on unnecessary
+    // socket communications.
     this.props.socket.on('new message', function(data) {
-      console.log('got emit');
       var newMessage = {
         user: data.user,
         text: data.text,
@@ -20,6 +27,9 @@ class ChatInput extends React.Component {
 
   }
 
+  // Handles all info when the user submits a chat.
+  // This includes changing of names, storing your own
+  // messages, etc.
   chatSubmit(event) {
     event.preventDefault();
     var messageText = this.refs.messageInput.value;
@@ -30,7 +40,6 @@ class ChatInput extends React.Component {
       prevName: this.refs.nameInput.value
     });
 
-    //test version until chat DB is up
     if(prevName !== this.state.name) {
       var announceNameChange = {
         user: prevName,
@@ -51,6 +60,9 @@ class ChatInput extends React.Component {
     this.props.updateChat();
   }
 
+
+  // This just keeps track of what nickname the user
+  // has chosen to use
   changeName() {
     this.setState({
       name: this.refs.nameInput.value
@@ -85,7 +97,7 @@ class ChatMessage extends React.Component {
 
 };
 
-//CHAT CONTROLLER
+// React component for rendering the actual chat box to the page
 class Chat extends React.Component {
   constructor(props) {
     super(props);
@@ -96,6 +108,8 @@ class Chat extends React.Component {
     }
   }
 
+  // This just generates a random name of the form
+  // Anonxxx where xxx is a random, three digit number
   genAnonName() {
     var num = Math.floor(Math.random() * 1000);
     var numStr = '000' + num;
@@ -104,6 +118,8 @@ class Chat extends React.Component {
     return name;
   }
 
+  // Just for utility in updating the chat correctly
+  // with the most up to date information
   updateChat() {
     this.forceUpdate();
   }
@@ -111,7 +127,6 @@ class Chat extends React.Component {
   render() {
     var chats = [];
     _.each(this.state.messages, function(message) {
-      console.log(message);
       chats.push(<ChatMessage message={message} key={message.id}/>);
     })
 
