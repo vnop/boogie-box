@@ -5,7 +5,7 @@
 ### socketAddr.js
   - Loaded into index.html, contains your socket address
   - This file is git IGNORED: it is up to you to define it with:
-    - window.socketAddr = 'http://<<ADDRESS>>:<<PORT>>';
+    - window.socketAddr = 'http://{ADDRESS}:{PORT}';
     - This is used for testing/deploying the app in various environments without needing to constantly update addresses and ports
 ### styles.css
   - Contains all styling information not built into backbone
