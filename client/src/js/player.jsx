@@ -3,77 +3,60 @@
 class Video extends React.Component {
   constructor(props) {
     super(props);
-    //default audio states
-
+    //if a video is not loaded, the url variable will be null. Otherwise, url will be set to the loaded video's url
     if (!this.props.video) {
       var url = null;
     } else {
       var url = this.props.video.videourl;
     }
+
     this.state = {
-      video: this.props.video,
-      url: url,
-      hideVid: false,
-      playing: true,
+    //default audio states
+      video: this.props.video, //reference state that allows us to access the video URL as well as its title
+      url: url, //the url that the react player component uses for current video
+      hideVid: false, //whether or not the videos are hidden on the page. Audio will play regardless
+      playing: true, //If false, playback is paused. Also controls automatic playback upon load
       muted: false,
-      volume: 1,
+      volume: 1, //volume is measure as a decimal number between 0 and 1
       played: 0,
       loaded: 0,
-      duration: 0,
-      progress: 0,
+      duration: 0, //value in seconds that counts the overall length of the video
+      progress: 0, //the current time at which the video is playing. This is a decimal number between 0 and 1
       serverData: 0,
-      playbackRate: 1.0,
-      useSync: true,
-      adminFlag: this.props.adminFlag,
+      playbackRate: 1.0, //the speed at which a video will be played, between 0 and 2
+      useSync: true, //optional state for whether or not a given connected user will remain in sync with the 'admin'
+      adminFlag: this.props.adminFlag, //state given to the first person to connect to the session. Playback sync is matched to their current playback time.
       initializedSync: false
     };
 
     this.props.socket.on('recTime', function (data) {
-      // console.log(`data --> ${JSON.stringify(data)}`);
-      this.setState({
-        serverData: data.time
-      });
-
+      this.setState({serverData: data.time});
       this.verifySync();
-
-      // if(!this.state.playing) {
-      //   this.playPause();
-      // }
-
-      // if(!this.state.adminFlag && !this.state.initializedSync) {
-      //   console.log('changing stuff *****************************************');
-      //   this.player.seekTo(this.state.serverData.progress);
-      //   this.setState({
-      //     video: this.state.serverData.video,
-      //     url: this.state.serverData.video.videourl,
-      //     progress: this.state.serverData.progress,
-      //     playing: this.state.serverData.playing,
-      //     initializedSync: true
-      //   });
-      // }
     }.bind(this));
 
+    //When the setAdminFlag event occurs, the setAdmin flag is also assigned in the component's states
     this.props.socket.on('setAdminFlag', function (data) {
-      console.log('adminFlag set to: ', data);
-      this.setState({
-        adminFlag: true
-      });
+      this.setState({adminFlag: true});
 
+      //if the user is the admin and their Sync hasn't already been initialized, it will force that initializtion
+      //this is important for when admin roles are handed off, such as when an admin disconnects
       if(this.state.adminFlag && !this.state.initializedSync) {
         this.setState({
           initializedSync: true
         });
-        this.startVideo();
+        this.startVideo();//ensures that the video playback automatically begins
       }
     }.bind(this));
 
     this.emitData();
   }
 
-  //Audio Controllers
+  //AUDIO CONTROLLERS
+  //stop button's controls
   stop() {
     this.setState({ url: null, playing: false, progress: 0 });
   }
+  //toggle for playing or pause
   playPause() {
     if (this.state.url) {
       this.setState({ playing: !this.state.playing });
@@ -86,57 +69,65 @@ class Video extends React.Component {
         });
       } else {
         this.setState({
+          //if the video had been stopped previous, this will resume playback of that from the beginning
           url: this.state.video.videourl,
           playing: true
         });
       }
     }
   }
+  //toggles the mute state
   mute() {
     this.setState({ muted: !this.state.muted });
   }
+  //sets the volume based on the position of the slider. See the HTML controls in the JSX below
   setVolume(vol) {
     if (this.state.muted) {this.setState({ muted: false })};
     this.setState({ volume: parseFloat(vol.target.value) });
   }
+  //toggles video visibility on the page. Audio plays regardless
   toggleVideo() {
     this.setState({ hideVid: !this.state.hideVid });
   }
 
+  //optional toggle sync button. When useSync is false, playback ignores the state of the current admin
   toggleSync() {
     this.setState({ useSync: !this.state.useSync });
   }
 
+  //updates the current progress time
   updateProgress(time) {
     this.setState({ progress: time.played });
   }
 
+  //method to compare syncronization of all connected users
   verifySync() {
-    if (!this.state.adminFlag && this.state.useSync) {
-      var clientTime = Math.floor(this.state.progress*this.state.duration);
-      var serverTime = Math.floor(this.state.serverData.progress*this.state.duration);
-      if (Math.abs(clientTime - serverTime) >= 4) {
-        this.player.seekTo(this.state.serverData.progress);
-        this.setState({
+    if (!this.state.adminFlag && this.state.useSync) { //if user is NOT the admin and the useSync button is ON
+      var clientTime = Math.floor(this.state.progress*this.state.duration);//variable to hold the USER's playback progress (in the form of seconds, rather than decimals)
+      var serverTime = Math.floor(this.state.serverData.progress*this.state.duration);//variable to hold the SERVER's playback progress (in the form of seconds, rather than decimals)
+      if (Math.abs(clientTime - serverTime) >= 4) {//this will check if a connected user is above or below 4 seconds away from the admin's current playback time, and if they are...
+        this.player.seekTo(this.state.serverData.progress); //force the user's playback time to match the admin's playback time
+        this.setState({//sets the 'progress' state to match the recently adjusted playback time
           progress: this.state.serverData.progress
         });
       }
-      if (this.state.playing !== this.state.serverData.playing) {
+      //The follow code will force synchronization of Player component states
+      if (this.state.playing !== this.state.serverData.playing) {//if the user's 'playing' does not match the admin's 'playing' state, toggles playPause on the video
         this.playPause();
       }
-      if (this.state.video && this.state.serverData.video) {
+      if (this.state.video && this.state.serverData.video) {//if the user's loaded video doesn't match the admin's video, force it to match
         if (this.state.video.id !== this.state.serverData.video.id) {
           this.setState({
             video: this.state.serverData.video,
             url: this.state.serverData.video.videourl
           });
         }
-      } else if (!this.state.video && this.state.serverData.video) {
+      } else if (!this.state.video && this.state.serverData.video) {//if a video had not been loaded for the user, force the current video that the admin has loaded to become loaded for the user
         this.setState({
           video: this.state.serverData.video,
           url: this.state.serverData.video.videourl
         });
-      } else {
+      } else {//if no other syncronization is necessary, set video and url to null, rendering an empty video frame
         this.setState({
           video: null,
           url: null
@@ -145,43 +136,40 @@ class Video extends React.Component {
     }
   }
 
-  emitData() {
+  emitData() {//if the user is the admin, emit the following data
     if (this.state.adminFlag) {
       var playerData = {
-        progress: this.state.progress,
-        video: this.state.video,
-        playing: this.state.playing
+        progress: this.state.progress, //what the current playback time is
+        video: this.state.video,  //what the current video playing should be
+        playing: this.state.playing //what the current playing 'state' (paused or playing) is
       };
-      // console.log('playerData ----->', playerData);
-      this.props.socket.emit('setTime', {time: playerData});
+      this.props.socket.emit('setTime', {time: playerData}); //emits the data to all connected users using socket
     }
 
-    setTimeout(this.emitData.bind(this), 1000);
+    setTimeout(this.emitData.bind(this), 1000);//repeat this method every 1 second
   }
 
-  startVideo() {
-    if(this.state.adminFlag && this.state.video === null && this.state.url === null) {
-      this.onVideoEnd();
+  startVideo() {//method to be run when a attempting to start a video
+    if(this.state.adminFlag && this.state.video === null && this.state.url === null) {//if the user is admin and there isn't a video loaded as well as no url has been assigned...
+      this.onVideoEnd();//run the video end method, detailed below
     }
   }
 
   onVideoEnd() {
-    if (this.state.adminFlag) {
-      var newVid = this.props.advanceQueue();
+    if (this.state.adminFlag) {//if the user is the admin...
+      var newVid = this.props.advanceQueue();//sets the newVid variable to the next video in the queue
 
-      this.setState({
+      this.setState({//clears the last url that was used
         url: ''
       });
 
-      if (newVid) {
-        console.log ('new video', newVid)
+      if (newVid) {//if a new video has been set...
         this.setState({
-          video: newVid,
-          url: newVid.videourl,
-          progress: 0
+          video: newVid, //set the new video's data
+          url: newVid.videourl, //set the new video's URL
+          progress: 0 //set its playback time to the start (zero)
         });
-      } else {
-        console.log('no new vid');
+      } else { //ortherwise use empty data, as no video exists to be played
         this.setState({
           video: null,
           url: null,
@@ -191,7 +179,7 @@ class Video extends React.Component {
     }
   }
 
-  render() {
+  render() { //render the video panel using bootstrap
     return (
       <div id='audioPanel' className='container-fluid' className="panel panel-info">
         <div id='plyrPnlHeading' className="panel-heading">
@@ -258,19 +246,4 @@ class Video extends React.Component {
   }
 };
 
-//appData for sharing between, mostly for tests before our database hook up
-window.appData = {
-  currentUrl: 'https://www.youtube.com/watch?v=KTvfwd3JZTE',
-  currentTime: 0,
-  chats: [
-    {id: 0, user: 'Phteven', text: 'This is a message!'},
-    {id: 1, user: 'Barabus', text: 'This song sucks'},
-    {id: 2, user: 'Phteven', text: 'That\'s not very nice barabus'},
-    {id: 3, user: 'Gertrude', text: 'Has anyone really been far as decided to use even go want to do look more like?'},
-    {id: 4, user: 'Kevin Bacon Himself', text: 'Yes'},
-    {id: 5, user: 'Karylon the Deceiver', text: 'Your existence is a mistake'}
-  ]
-};
-
-//AVAIL CLASSES TO WINDOW
 window.Video = Video;
