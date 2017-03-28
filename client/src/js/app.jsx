@@ -3,10 +3,20 @@ class App extends React.Component {
     super(props);
   }
 
+  // Passed to relevant components so that
+  // they can manage pulling from the queue
+  // and playing new videos.
+  // refers to the advanceQueue method in
+  // the Queue component
   advanceQueue() {
     return this.refs.queue.advanceQueue();
   }
 
+  // Used to start playing a video in the event
+  // that the state of the player should go from
+  // empty to playing a particular video.
+  // refers to the startVideo method in the
+  // Video component
   startVideo() {
     this.refs.player.startVideo();
   }
