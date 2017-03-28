@@ -26,11 +26,12 @@
 
 ## Requirements
 
-- Node
+- node
 - npm
 - bower
 - grunt
 - sqlite3
+- babel
 
 ## Development
 
@@ -39,6 +40,10 @@
 From within the root directory:
 
 ```sh
+// create's config.js and populate file with port and api_key
+echo "module.exports = {port: <port_no_here>, YOUTUBE_API_KEY: <YOUR_KEY_HERE>};" >> ./server/config.js
+// socketAddr used in client/src/js/index.js
+echo "window.socketAddr = '<APP URL i.e., http://localhost:8080>';" >> ./client/socketAddr.js
 sudo npm install -g bower
 npm install
 bower install

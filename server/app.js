@@ -5,15 +5,16 @@ var path = require('path');
 var VideoData = require('./db').VideoData;
 var url = require('url');
 var request = require('request');
-var config = require('./config');
+var config = require('./config');   //contains port & YOUTUBE_API_KEY
 
 var app = express();
 
-app.use(express.static(path.join(__dirname, '../client')));
-app.use(morgan('dev'));
+app.use(express.static(path.join(__dirname, '../client'))); //serve static files
+app.use(morgan('dev')); //set logger
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//route to get all urls
 app.get('/api/url', function(req, res) {
   VideoData.findAll({}).then(function(urls) {
     console.log(`urls ${JSON.stringify(urls)}`);
@@ -21,13 +22,14 @@ app.get('/api/url', function(req, res) {
   });
 });
 
+//adding 1 url to VideoData table
 app.post('/api/url', function(req, res, next) {
   var queryData = url.parse(req.body.videourl, true).query;
 
+  //if this is a proper youtube url with the "v" query string (after the watch)
+  //i.e https://www.youtube.com/watch?v=8boneOGMa00
   if (queryData && queryData.v) {
-    //'https://www.googleapis.com/youtube/v3/videos?id=' + queryData.v + '&key=AIzaSyDq9XWYzDJrY3jNbZExt8UxHXXNamWbNE0%20&fields=items(id,snippet(title))&part=snippet'
-
-
+    //get the title by making a request to the youtube api
     request('https://www.googleapis.com/youtube/v3/videos?id=' + queryData.v + '&key=' + config.YOUTUBE_API_KEY + '&fields=items(id,snippet(title))&part=snippet', function (err, response, body) {
       if (err) {
         throw err;
@@ -35,6 +37,7 @@ app.post('/api/url', function(req, res, next) {
 
       var parseBody = JSON.parse(body);
 
+      //add record to db
       VideoData.create({
         videourl: req.body.videourl,
         origin: req.body.origin,
@@ -44,22 +47,19 @@ app.post('/api/url', function(req, res, next) {
       }).then(function() {
         console.log(`req body ${JSON.stringify(req.body)}`);
         res.send('done');
-        next();
+        next(); //refer to app.use line 17 server.js
       });
     });
   }
 });
 
+//update upvote or downvote by 1 given an id
 app.put('/api/url/:id', function (req, res, next) {
-  // send -> '/api/url/upvote/_id'
-  // send -> '/api/url/downvote/_id'
-
-  // req.body.value
-
   var id = req.params.id;
 
   if ((req.body).hasOwnProperty('upVote') || (req.body).hasOwnProperty('downVote')) {
 
+    //find record by id first
     VideoData.findAll({
       where: {
         id: id
@@ -67,9 +67,11 @@ app.put('/api/url/:id', function (req, res, next) {
     }).then(function(url) {
       var newValue;
 
+      //if req.body is upVote
       if ((req.body).hasOwnProperty('upVote')) {
-        newValue = url[0].dataValues.upVote + 1;
+        newValue = url[0].dataValues.upVote + 1;  //increment
 
+        //update new value
         VideoData.update({
           upVote: newValue
         }, {
@@ -79,10 +81,11 @@ app.put('/api/url/:id', function (req, res, next) {
         });
 
         res.send('updated for id ' + id);
-        next();
+        next(); //refer to app.use line 17 server.js
       } else if ((req.body).hasOwnProperty('downVote')) {
-        newValue = url[0].dataValues.downVote + 1;
+        newValue = url[0].dataValues.downVote + 1; //increment
 
+        //update new value
         VideoData.update({
           downVote: newValue
         }, {
@@ -92,7 +95,7 @@ app.put('/api/url/:id', function (req, res, next) {
         });
 
         res.send('updated for id ' + id);
-        next();
+        next(); //refer to app.use line 17 server.js
       }
     });
   } else {
@@ -100,19 +103,13 @@ app.put('/api/url/:id', function (req, res, next) {
   }
 });
 
+//delete url based on id
 app.delete('/api/url/:id', function(req, res, next) {
   VideoData.destroy({ where : {id: req.params.id} }).then(function () {
     console.log('deleted done');
     res.send('deleted successfully');
-    next();
+    next(); //refer to app.use line 17 server.js
   });
 });
 
 module.exports = app;
-
-
-
-
-    // this.props.socket.on('queueChange', function (data) {
-    //   console.log('queueChange: ', data);
-    // });

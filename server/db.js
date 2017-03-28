@@ -15,6 +15,7 @@ var VideoData = sequelize.define('videodata', {
   downVote: Sequelize.INTEGER
 });
 
+//if force: true then each time you start the server/app again the db will be refreshed (zero data). if force: true is not given then you continue with your existing data when you restart your app
 // VideoData.sync({force: true});
 VideoData.sync();
 
