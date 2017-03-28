@@ -1,10 +1,10 @@
 # Client-Side File Rundown
 
 ### index.html
-  - Main landing point for the page
+  - Main landing point for the app
 ### socketAddr.js
   - Loaded into index.html, contains your socket address
-  - This file is git IGNORED: it is up to you to define it with:
+  - This file is git IGNORED!!! it is up to you to define it with:
     - window.socketAddr = 'http://{ADDRESS}:{PORT}';
     - This is used for testing/deploying the app in various environments without needing to constantly update addresses and ports
 ### styles.css
