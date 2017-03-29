@@ -166,6 +166,7 @@ class Chat extends React.Component {
       chats.push(<ChatMessage message={message} key={message.id}/>);
     });
 
+
     return (
       <div className="chatBox">
         <div id='chatPanel' className='panel panel-info'>
