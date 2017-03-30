@@ -19,7 +19,7 @@ class ChatInput extends React.Component {
       var newMessage = {
         user: data.user,
         text: data.text,
-        // id: this.state.messages.length
+        id: this.state.messages.length
       };
       this.state.messages.push(newMessage);
 
@@ -30,7 +30,6 @@ class ChatInput extends React.Component {
       }.bind(this));
 
 
-      // this.props.updateChat();
     }.bind(this));
 
   }
@@ -129,14 +128,13 @@ class Chat extends React.Component {
 
   // Just for utility in updating the chat correctly
   // with the most up to date information
-  updateChat() {
+  updateChat(next) {
     var getChatCallback = function(err, data) {
       if (err) {
         console.log('Error on retrieving chat', err);
       } else {
-        console.log('messages:', data.messages);
         this.setState({
-          messages: data.messages
+          messages: data
         });
       }
     };

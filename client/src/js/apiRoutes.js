@@ -148,11 +148,10 @@ var postChat = function(message, cb = defaultCallback) {
   $.ajax({
     method: 'POST',
     url: '/api/chat',
-    dataType: 'json',
     data: message,
     success: function(response) {
       console.log('response on postChat', JSON.stringify(response));
-      cb(null, response);
+      return cb(null, response);
     },
     error: function(err) {
       console.log('error on postChat', err);

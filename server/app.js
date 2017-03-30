@@ -115,28 +115,29 @@ app.delete('/api/url/:id', function(req, res, next) {
 
 // TEST //
 // CHAT DB //
-app.get('/api/chat', function(req, res, next) {
+app.get('/api/chat', function(req, res) {
   ChatData.findAll({}).then(function(messages) {
     console.log(`messages ${JSON.stringify(messages)}`);
+    res.send(messages);
   });
 });
 
 app.post('/api/chat', function(req, res, next) {
-  var queryData = url.parse(req.body.message, true).query;
 
-  if (queryData) {
-    var parseBody = JSON.parse(body);
-
-    //add record to db
-    ChatData.create({
-      message: req.body.message,
-      user: req.body.user,
-    }).then(function() {
-      console.log(`req body ${JSON.stringify(req.body)}`);
-      res.send('done');
-      next(); //refer to app.use line 17 server.js
-    });
+  var message = {
+    text: req.body.text,
+    user: req.body.user
   }
+
+  //add record to db
+  ChatData.create({
+    text: message.text,
+    user: message.user
+  }).then(function() {
+    console.log(`req body ${JSON.stringify(req.body)}`);
+    res.send('done');
+    next(); //refer to app.use line 17 server.js
+  });
 });
 
 module.exports = app;
