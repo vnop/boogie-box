@@ -19,10 +19,18 @@ class ChatInput extends React.Component {
       var newMessage = {
         user: data.user,
         text: data.text,
-        id: this.state.messages.length
+        // id: this.state.messages.length
       };
       this.state.messages.push(newMessage);
-      this.props.updateChat();
+
+      //persist here
+      // TESTING //
+      apiHelper.postChat(newMessage, function() {
+        this.props.updateChat();
+      }.bind(this));
+
+
+      // this.props.updateChat();
     }.bind(this));
 
   }
@@ -118,9 +126,22 @@ class Chat extends React.Component {
     return name;
   }
 
+
   // Just for utility in updating the chat correctly
   // with the most up to date information
   updateChat() {
+    var getChatCallback = function(err, data) {
+      if (err) {
+        console.log('Error on retrieving chat', err);
+      } else {
+        console.log('messages:', data.messages);
+        this.setState({
+          messages: data.messages
+        });
+      }
+    };
+    apiHelper.getChat(getChatCallback.bind(this));
+
     this.forceUpdate();
   }
 

@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var path = require('path');
 var VideoData = require('./db').VideoData;
+var ChatData = require('./db').ChatData;
 var url = require('url');
 var request = require('request');
 var config = require('./config');   //contains port & YOUTUBE_API_KEY
@@ -110,6 +111,32 @@ app.delete('/api/url/:id', function(req, res, next) {
     res.send('deleted successfully');
     next(); //refer to app.use line 17 server.js
   });
+});
+
+// TEST //
+// CHAT DB //
+app.get('/api/chat', function(req, res, next) {
+  ChatData.findAll({}).then(function(messages) {
+    console.log(`messages ${JSON.stringify(messages)}`);
+  });
+});
+
+app.post('/api/chat', function(req, res, next) {
+  var queryData = url.parse(req.body.message, true).query;
+
+  if (queryData) {
+    var parseBody = JSON.parse(body);
+
+    //add record to db
+    ChatData.create({
+      message: req.body.message,
+      user: req.body.user,
+    }).then(function() {
+      console.log(`req body ${JSON.stringify(req.body)}`);
+      res.send('done');
+      next(); //refer to app.use line 17 server.js
+    });
+  }
 });
 
 module.exports = app;

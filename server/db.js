@@ -15,10 +15,18 @@ var VideoData = sequelize.define('videodata', {
   downVote: Sequelize.INTEGER
 });
 
+var ChatData = sequelize.define('chatdata', {
+  user: Sequelize.STRING,
+  text: Sequelize.STRING
+});
+
 //if force: true then each time you start the server/app again the db will be refreshed (zero data). if force: true is not given then you continue with your existing data when you restart your app
 // VideoData.sync({force: true});
 VideoData.sync();
+// ChatData.sync({force: true});
+ChatData.sync();
 
 module.exports = {
-  VideoData: VideoData
+  VideoData: VideoData,
+  ChatData: ChatData
 };
