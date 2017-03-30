@@ -131,6 +131,9 @@ class Chat extends React.Component {
       messages: [],
       anonName: this.genAnonName()
     }
+
+
+
   }
 
 
@@ -160,11 +163,28 @@ class Chat extends React.Component {
     apiHelper.getChat(getChatCallback.bind(this));
   }
 
+//   componentWillUpdate() {
+//     console.log('in componentWillUpdate')
+//   var node = this.refs.scrollbar;
+//   console.log(this.refs)
+//   let hScrollBarHeight = (node.scrollWidth !== node.clientWidth) ? 20 : 0;
+//   this.shouldScrollBottom = ((node.scrollTop + node.clientHeight + hScrollBarHeight) >= node.scrollHeight)
+//   }
+
+//   componentDidUpdate() {
+//   console.log('in componentDidUpdate')
+//   if (this.shouldScrollBottom) {
+//     var node = this.refs.scrollbar;
+//     node.scrollTop = node.scrollHeight;
+//   }
+// }
+
+
   render() {
     var chats = [];
     _.each(this.state.messages, function(message) {
       chats.push(<ChatMessage message={message} key={message.id}/>);
-    });
+    })
 
 
     return (
@@ -184,5 +204,7 @@ class Chat extends React.Component {
     )
   }
 };
+
+
 
 window.Chat = Chat;
