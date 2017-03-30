@@ -70,8 +70,6 @@ module.exports = function(grunt) {
         files: ['client/src/**/*.jsx', 'client/src/**/*.js'],
         tasks: [
           'shell:compile',
-          'concat',
-          'uglify'
         ]
       }, css: {
         files: 'client/*.css',
