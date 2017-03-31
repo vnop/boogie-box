@@ -10,7 +10,7 @@ class ChatInput extends React.Component {
     }
 
     // Messages will render on load
-    this.props.updateChat(false);
+    this.props.updateChat();
 
     // Handles receiving new messages from the socket
     // Note: Only users who didn't send the message will
@@ -141,9 +141,6 @@ class Chat extends React.Component {
       }
     };
     apiHelper.getChat(getChatCallback.bind(this));
-
-
-    shouldUpdate && this.forceUpdate();
   }
 
   render() {
