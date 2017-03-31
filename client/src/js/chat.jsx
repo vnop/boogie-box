@@ -57,6 +57,8 @@ class ChatInput extends React.Component {
       this.props.socket.emit('new message', announceNameChange);
       announceNameChange.id=this.state.messages.length;
       this.state.messages.push(announceNameChange);
+      // TEST //
+      apiHelper.postUserToSession(this.state.name);
     }
 
     var newMessage = {
@@ -117,6 +119,22 @@ class Chat extends React.Component {
     }
   }
 
+  // First try to receive username
+  // If not username, genAnonName
+  getUserFromSession() {
+    $.ajax({
+      method: 'GET',
+      url: '/api/user',
+      success: function(name) {
+        cb(null, data);
+      },
+
+      error: function(err) {
+        cb(err);
+      }
+    });
+  }
+
   // This just generates a random name of the form
   // Anonxxx where xxx is a random, three digit number
   genAnonName() {
@@ -130,7 +148,7 @@ class Chat extends React.Component {
 
   // Just for utility in updating the chat correctly
   // with the most up to date information
-  updateChat(shouldUpdate = true) {
+  updateChat() {
     var getChatCallback = function(err, data) {
       if (err) {
         console.log('Error on retrieving chat', err);
@@ -147,15 +165,16 @@ class Chat extends React.Component {
     var chats = [];
     _.each(this.state.messages, function(message) {
       chats.push(<ChatMessage message={message} key={message.id}/>);
-    })
-
+    });
 
     return (
       <div className="chatBox">
         <div id='chatPanel' className='panel panel-info'>
           <div id='chatTitle' className='panel-heading'>Boogie-Chat</div>
           <div id='chatPanBody' className='panel-body'>
-            <div id='textBody'>{chats}</div>
+            <div id='textBody'>
+              {chats}
+            </div>
           </div>
           <div id='chatPanFtr' className='panel-footer'>
             <ChatInput messages={this.state.messages} name={this.state.anonName} updateChat={this.updateChat.bind(this)} socket={this.props.socket}/>

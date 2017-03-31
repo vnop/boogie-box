@@ -59,7 +59,6 @@ var postVideo = function(url, cb) {
   $.ajax({
     method: 'POST',
     url: '/api/url',
-    dataType: 'json',
     data: video,
     success: function(response) {
       console.log('response on postVideo', JSON.stringify(response));
@@ -160,6 +159,26 @@ var postChat = function(message, cb = defaultCallback) {
   });
 };
 
+// Creating user requesta
+var postUserToSession = function(user, cb = defaultCallback) {
+
+  var user = { name: user };
+
+  $.ajax({
+    method: 'POST',
+    url: '/api/user',
+    data: user,
+    success: function(response) {
+      console.log('response on posting user', JSON.stringify(response));
+      cb(null, response);
+    },
+    error: function(err) {
+      console.log('error on posting user', err);
+      cb(err);
+    }
+  });
+}
+
 // Exports all the api helpers. use apiHelper.<method> to invoke any
 // function in this file.
 
@@ -169,5 +188,6 @@ window.apiHelper = {
   removeVideo: removeVideo,
   vote: vote,
   getChat: getChat,
-  postChat: postChat
+  postChat: postChat,
+  postUserToSession: postUserToSession
 };
