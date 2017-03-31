@@ -9,6 +9,8 @@ class ChatInput extends React.Component {
       messages: this.props.messages
     }
 
+    // Messages will render on load
+    this.props.updateChat();
 
     // Handles receiving new messages from the socket
     // Note: Only users who didn't send the message will
@@ -21,8 +23,15 @@ class ChatInput extends React.Component {
         text: data.text,
         id: this.state.messages.length
       };
+      apiHelper.postChat(newMessage, function() {
+        this.props.updateChat();
+      }.bind(this));
+
+      // This is a temporary message to show the user
+      // that their message was posted. When they receive
+      //  a new message, the view will rerender and this
+      // will be overwritten with the actual message
       this.state.messages.push(newMessage);
-      this.props.updateChat();
     }.bind(this));
 
   }
@@ -118,10 +127,20 @@ class Chat extends React.Component {
     return name;
   }
 
+
   // Just for utility in updating the chat correctly
   // with the most up to date information
-  updateChat() {
-    this.forceUpdate();
+  updateChat(shouldUpdate = true) {
+    var getChatCallback = function(err, data) {
+      if (err) {
+        console.log('Error on retrieving chat', err);
+      } else {
+        this.setState({
+          messages: data
+        });
+      }
+    };
+    apiHelper.getChat(getChatCallback.bind(this));
   }
 
   render() {

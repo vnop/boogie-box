@@ -129,6 +129,36 @@ var vote = function(vote, video, cb) {
   });
 };
 
+// Creating chat requests
+var getChat = function(cb = defaultCallback) {
+  $.ajax({
+    method: 'GET',
+    url: '/api/chat',
+    success: function(data) {
+      cb(null, data);
+    },
+    error: function(err) {
+      cb(err);
+    }
+  });
+};
+
+var postChat = function(message, cb = defaultCallback) {
+
+  $.ajax({
+    method: 'POST',
+    url: '/api/chat',
+    data: message,
+    success: function(response) {
+      console.log('response on postChat', JSON.stringify(response));
+      return cb(null, response);
+    },
+    error: function(err) {
+      console.log('error on postChat', err);
+      cb(err);
+    }
+  });
+};
 
 // Exports all the api helpers. use apiHelper.<method> to invoke any
 // function in this file.
@@ -137,5 +167,7 @@ window.apiHelper = {
   getVideos: getVideos,
   postVideo: postVideo,
   removeVideo: removeVideo,
-  vote: vote
+  vote: vote,
+  getChat: getChat,
+  postChat: postChat
 };
