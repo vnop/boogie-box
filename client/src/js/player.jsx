@@ -6,8 +6,10 @@ class Video extends React.Component {
     //if a video is not loaded, the url variable will be null. Otherwise, url will be set to the loaded video's url
     if (!this.props.video) {
       var url = null;
+      var setPlay = false;
     } else {
       var url = this.props.video.videourl;
+      var setPlay = true;
     }
 
     this.state = {
@@ -15,7 +17,7 @@ class Video extends React.Component {
       video: this.props.video, //reference state that allows us to access the video URL as well as its title
       url: url, //the url that the react player component uses for current video
       hideVid: false, //whether or not the videos are hidden on the page. Audio will play regardless
-      playing: true, //If false, playback is paused. Also controls automatic playback upon load
+      playing: setPlay, //If false, playback is paused. Also controls automatic playback upon load
       muted: false,
       volume: 1, //volume is measure as a decimal number between 0 and 1
       played: 0,
@@ -173,7 +175,8 @@ class Video extends React.Component {
         this.setState({
           video: null,
           url: null,
-          progress: 0
+          progress: 0,
+          playing: false
         });
       }
     }
@@ -194,6 +197,8 @@ class Video extends React.Component {
               <ReactPlayer
                 ref={player => { this.player = player } }
                 url={this.state.url}
+                width='100%'
+                height='480px'
                 hidden={this.state.hideVid} //hides the video frame by default; can be toggled
                 playing={this.state.playing} //controls playback
                 //volume={this.state.volume}
