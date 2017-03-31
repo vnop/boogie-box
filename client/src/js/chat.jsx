@@ -151,6 +151,7 @@ class Chat extends React.Component {
   // Just for utility in updating the chat correctly
   // with the most up to date information
   updateChat() {
+<<<<<<< HEAD
     var getChatCallback = function(err, data) {
       if (err) {
         console.log('Error on retrieving chat', err);
@@ -161,6 +162,11 @@ class Chat extends React.Component {
       }
     };
     apiHelper.getChat(getChatCallback.bind(this));
+=======
+    this.forceUpdate();
+    // componentDidUpdate() {
+    // this.scrollElement();
+>>>>>>> close video player when no vids playing
   }
 
 //   componentWillUpdate() {
@@ -184,8 +190,10 @@ class Chat extends React.Component {
     var chats = [];
     _.each(this.state.messages, function(message) {
       chats.push(<ChatMessage message={message} key={message.id}/>);
-    })
 
+    })
+    var e = chats[chats.length - 1]
+    e.scrollElement();
 
     return (
       <div className="chatBox">

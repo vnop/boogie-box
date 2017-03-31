@@ -169,18 +169,25 @@ class Video extends React.Component {
         this.setState({
           video: newVid, //set the new video's data
           url: newVid.videourl, //set the new video's URL
-          progress: 0 //set its playback time to the start (zero)
+          progress: 0, //set its playback time to the start (zero)
+          hideVid: false
         });
       } else { //ortherwise use empty data, as no video exists to be played
         this.setState({
           video: null,
           url: null,
           progress: 0,
+<<<<<<< HEAD
           playing: false
+=======
+          hideVid: true
+>>>>>>> close video player when no vids playing
         });
       }
     }
   }
+
+
 
   render() { //render the video panel using bootstrap
     return (
