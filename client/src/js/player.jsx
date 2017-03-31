@@ -175,7 +175,8 @@ class Video extends React.Component {
         this.setState({
           video: null,
           url: null,
-          progress: 0
+          progress: 0,
+          playing: false
         });
       }
     }
@@ -196,6 +197,8 @@ class Video extends React.Component {
               <ReactPlayer
                 ref={player => { this.player = player } }
                 url={this.state.url}
+                width='100%'
+                height='480px'
                 hidden={this.state.hideVid} //hides the video frame by default; can be toggled
                 playing={this.state.playing} //controls playback
                 //volume={this.state.volume}
