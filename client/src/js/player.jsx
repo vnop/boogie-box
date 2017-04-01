@@ -177,11 +177,8 @@ class Video extends React.Component {
           video: null,
           url: null,
           progress: 0,
-<<<<<<< HEAD
-          playing: false
-=======
-          hideVid: true
->>>>>>> close video player when no vids playing
+          hideVid: true,
+          playing: setPlay
         });
       }
     }

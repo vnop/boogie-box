@@ -70,6 +70,16 @@ io.on('connection', function (socket) {
     // we tell the client to execute 'new message'
     socket.broadcast.emit('new message', data);
   });
+
+  socket.on('typing', function(data) {
+    console.log('71 in server.js', data)
+    socket.broadcast.emit('typing', data);
+  });
+
+  socket.on('end typing', function(data) {
+    console.log('typing event stopped.');
+    socket.broadcast.emit('end typing', data)
+  })
 });
 
 

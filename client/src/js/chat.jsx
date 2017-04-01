@@ -6,7 +6,9 @@ class ChatInput extends React.Component {
     this.state = {
       prevName: this.props.name,
       name: this.props.name,
-      messages: this.props.messages
+      messages: this.props.messages,
+      typing: false,
+      lastTypingTime: null
     }
 
     // Messages will render on load
@@ -26,6 +28,23 @@ class ChatInput extends React.Component {
       apiHelper.postChat(newMessage, function() {
         this.props.updateChat();
       }.bind(this));
+    }.bind(this));
+
+
+    this.props.socket.on('typing', function(data) {
+      console.log('-----------typing')
+      this.setState({
+        typing: true
+      })
+    }.bind(this));
+
+
+    this.props.socket.on('end typing', function() {
+      console.log(this.state.name + 'stopped typing');
+
+      this.setState({
+        typing: false
+      })
     }.bind(this));
 
   }
@@ -70,6 +89,31 @@ class ChatInput extends React.Component {
     this.props.updateChat();
   }
 
+  chatTyping(event) {
+    event.preventDefault();
+    var that = this;
+    if (!this.state.typing) {
+
+      this.state.typing = !this.state.typing,
+      this.state.lastTypingTime = (new Date()).getTime();
+
+      var lastTimeTyping = this.state.lastTypingTime;
+      console.log('this.state.typing', this.state.typing + 'lastTimeTyping: ', lastTimeTyping);
+      this.props.socket.emit('typing')
+    }
+    setTimeout(function() {
+      var typingTimer = (new Date()).getTime();
+      var timeDiff = typingTimer - lastTimeTyping;
+      console.log('this.state.typing in setTimeout:  ', that.state.typing)
+      if (timeDiff >= 2000 && that.state.typing) {
+        that.props.socket.emit('end typing')
+        }
+
+        that.setState({
+          typing: false
+        })
+      }, 2000)
+  }
 
   // This just keeps track of what nickname the user
   // has chosen to use
@@ -77,6 +121,7 @@ class ChatInput extends React.Component {
     this.setState({
       name: this.refs.nameInput.value
     });
+    this.props.socket.emit('typing', {});
   }
 
   componentDidMount() {
@@ -96,7 +141,7 @@ class ChatInput extends React.Component {
 
   render() {
     return (
-      <form id='allChatInputs' onSubmit={this.chatSubmit.bind(this)}>
+      <form id='allChatInputs' onChange={this.chatTyping.bind(this)} onSubmit={this.chatSubmit.bind(this)}>
         <input id='userIdBox' type='text' ref='nameInput' value={this.state.name} onChange={this.changeName.bind(this)}></input>
         <input id='chatInputBox' type='text' ref='messageInput'></input>
         <button id='chatSubmitBtn' className='btn btn-sm btn-default' type='submit'>Send</button>
@@ -151,7 +196,6 @@ class Chat extends React.Component {
   // Just for utility in updating the chat correctly
   // with the most up to date information
   updateChat() {
-<<<<<<< HEAD
     var getChatCallback = function(err, data) {
       if (err) {
         console.log('Error on retrieving chat', err);
@@ -162,11 +206,6 @@ class Chat extends React.Component {
       }
     };
     apiHelper.getChat(getChatCallback.bind(this));
-=======
-    this.forceUpdate();
-    // componentDidUpdate() {
-    // this.scrollElement();
->>>>>>> close video player when no vids playing
   }
 
 //   componentWillUpdate() {
@@ -187,21 +226,32 @@ class Chat extends React.Component {
 
 
   render() {
+    var typingMessage = `${this.state.name} is typing`;
     var chats = [];
+    var typingNote = [];
     _.each(this.state.messages, function(message) {
       chats.push(<ChatMessage message={message} key={message.id}/>);
-
     })
-    var e = chats[chats.length - 1]
-    e.scrollElement();
 
+
+    if (this.state.typing) {
+      typingNote.concat([typingMessage])
+    } else {
+      typingNote = [];
+    }
+    // var e = chats[chats.length - 1]
+    // e.scrollElement();
     return (
       <div className="chatBox">
         <div id='chatPanel' className='panel panel-info'>
           <div id='chatTitle' className='panel-heading'>Boogie-Chat</div>
           <div id='chatPanBody' className='panel-body'>
-            <div id='textBody'>
-              {chats}
+            <div id='textBody'>{chats}
+              <div style = {{float: "left", clear: "both"}} ref={(el) => { this.messagesEnd = el; }}>
+              </div>
+              <div id='notifyTyping'>{typingNote}</div>
+              <div id='isTyping' className='typing-notification'>
+              </div>
             </div>
           </div>
           <div id='chatPanFtr' className='panel-footer'>
