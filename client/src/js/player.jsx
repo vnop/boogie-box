@@ -87,6 +87,17 @@ class Video extends React.Component {
     if (this.state.muted) {this.setState({ muted: false })};
     this.setState({ volume: parseFloat(vol.target.value) });
   }
+  // functions for the seek bar
+  onSeekMouseDown(e) {
+    this.setState({ seeking: true })
+  }
+  onSeekChange(e) {
+    this.setState({ played: parseFloat(e.target.value) })
+  }
+  onSeekMouseUp(e) {
+    this.setState({ seeking: false })
+    this.player.seekTo(parseFloat(e.target.value))
+  }
   //toggles video visibility on the page. Audio plays regardless
   toggleVideo() {
     this.setState({ hideVid: !this.state.hideVid });
@@ -214,6 +225,19 @@ class Video extends React.Component {
           </div>
 
           <div id='allCtrls' className='row'>
+            <div id='seekBar' className='col-md-12'>
+              <div id='progBar'className='progress'>
+              <input
+                  type='range' min={0} max={1} step='any'
+                  value={this.state.played}
+                  onMouseDown={this.onSeekMouseDown.bind(this)}
+                  onChange={this.onSeekChange.bind(this)}
+                  onMouseUp={this.onSeekMouseUp.bind(this)}
+                  className='progress-bar progress-bar-striped active'
+                  role='progressbar'
+                />
+              </div>
+            </div>
             <div className='col-xs-8'>
               <div className='videoCtrl'>
                 <button className='btn btn-sm btn-default' onClick={this.playPause.bind(this)}><span className={this.state.playing ? 'glyphicon glyphicon-pause' : 'glyphicon glyphicon-play'}></span></button>
