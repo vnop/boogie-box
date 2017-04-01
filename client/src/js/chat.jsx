@@ -57,7 +57,7 @@ class ChatInput extends React.Component {
       this.props.socket.emit('new message', announceNameChange);
       announceNameChange.id=this.state.messages.length;
       this.state.messages.push(announceNameChange);
-      // TEST //
+
       apiHelper.postUserToSession(this.state.name);
     }
 
@@ -78,6 +78,21 @@ class ChatInput extends React.Component {
     this.setState({
       name: this.refs.nameInput.value
     });
+  }
+
+  componentDidMount() {
+    var setName = function(err, name) {
+      if (err) {
+        console.error(err);
+      } else {
+        this.setState({
+          prevName: name,
+          name: name
+        });
+      }
+    }.bind(this);
+
+    apiHelper.getUserFromSession(setName);
   }
 
   render() {
@@ -119,21 +134,6 @@ class Chat extends React.Component {
     }
   }
 
-  // First try to receive username
-  // If not username, genAnonName
-  getUserFromSession() {
-    $.ajax({
-      method: 'GET',
-      url: '/api/user',
-      success: function(name) {
-        cb(null, data);
-      },
-
-      error: function(err) {
-        cb(err);
-      }
-    });
-  }
 
   // This just generates a random name of the form
   // Anonxxx where xxx is a random, three digit number

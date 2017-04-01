@@ -159,6 +159,19 @@ var postChat = function(message, cb = defaultCallback) {
   });
 };
 
+var getUserFromSession = function(cb = defaultCallback) {
+  $.ajax({
+    method: 'GET',
+    url: '/api/user',
+    success: function(name) {
+      cb(null, name);
+    },
+    error: function(err) {
+      cb(err);
+    }
+  });
+};
+
 // Creating user requesta
 var postUserToSession = function(user, cb = defaultCallback) {
 
@@ -169,7 +182,6 @@ var postUserToSession = function(user, cb = defaultCallback) {
     url: '/api/user',
     data: user,
     success: function(response) {
-      console.log('response on posting user', JSON.stringify(response));
       cb(null, response);
     },
     error: function(err) {
@@ -177,7 +189,7 @@ var postUserToSession = function(user, cb = defaultCallback) {
       cb(err);
     }
   });
-}
+};
 
 // Exports all the api helpers. use apiHelper.<method> to invoke any
 // function in this file.
@@ -189,5 +201,6 @@ window.apiHelper = {
   vote: vote,
   getChat: getChat,
   postChat: postChat,
+  getUserFromSession: getUserFromSession,
   postUserToSession: postUserToSession
 };

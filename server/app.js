@@ -151,14 +151,14 @@ app.use(session({
 }));
 
 app.get('/api/user', function(req, res) {
-  //
+  req.session.user && res.send(req.session.user) || res.status(404).send('No username stored');
 });
 
 app.post('/api/user', function(req, res, next) {
 
   req.session.user = req.body.name;
 
-  res.send(req.session.user + ' created');
+  res.send(req.session.user + ' stored in session');
 });
 
 
