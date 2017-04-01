@@ -113,8 +113,7 @@ app.delete('/api/url/:id', function(req, res, next) {
   });
 });
 
-// TEST //
-// CHAT DB //
+// get chat messages from db
 app.get('/api/chat', function(req, res) {
   ChatData.findAll({}).then(function(messages) {
     console.log(`messages ${JSON.stringify(messages)}`);
@@ -122,6 +121,7 @@ app.get('/api/chat', function(req, res) {
   });
 });
 
+// post message to db
 app.post('/api/chat', function(req, res, next) {
 
   var message = {
@@ -139,5 +139,27 @@ app.post('/api/chat', function(req, res, next) {
     next(); //refer to app.use line 17 server.js
   });
 });
+
+// let's create a session!
+var session = require('client-sessions');
+
+app.use(session({
+  cookieName: 'session',
+  secret: 'random_string_goes_here',
+  duration: 30 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000,
+}));
+
+app.get('/api/user', function(req, res) {
+  req.session.user && res.send(req.session.user) || res.status(404).send('No username stored');
+});
+
+app.post('/api/user', function(req, res, next) {
+
+  req.session.user = req.body.name;
+
+  res.send(req.session.user + ' stored in session');
+});
+
 
 module.exports = app;
