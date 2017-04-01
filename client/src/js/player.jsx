@@ -87,17 +87,6 @@ class Video extends React.Component {
     if (this.state.muted) {this.setState({ muted: false })};
     this.setState({ volume: parseFloat(vol.target.value) });
   }
-  // functions for the seek bar
-  onSeekMouseDown(e) {
-    this.setState({ seeking: true })
-  }
-  onSeekChange(e) {
-    this.setState({ played: parseFloat(e.target.value) })
-  }
-  onSeekMouseUp(e) {
-    this.setState({ seeking: false })
-    this.player.seekTo(parseFloat(e.target.value))
-  }
   //toggles video visibility on the page. Audio plays regardless
   toggleVideo() {
     this.setState({ hideVid: !this.state.hideVid });
@@ -224,39 +213,22 @@ class Video extends React.Component {
             </div>
           </div>
 
-          <div id='allCtrls' className='row'>
-            <div id='seekBar' className='col-md-12'>
-              <div id='progBar'className='progress'>
-              <input
-                  type='range' min={0} max={1} step='any'
-                  value={this.state.played}
-                  onMouseDown={this.onSeekMouseDown.bind(this)}
-                  onChange={this.onSeekChange.bind(this)}
-                  onMouseUp={this.onSeekMouseUp.bind(this)}
-                  className='progress-bar progress-bar-striped active'
-                  role='progressbar'
-                />
-              </div>
-            </div>
-            <div className='col-xs-8'>
-              <div className='videoCtrl'>
-                <button className='btn btn-sm btn-default' onClick={this.playPause.bind(this)}><span className={this.state.playing ? 'glyphicon glyphicon-pause' : 'glyphicon glyphicon-play'}></span></button>
-                <button className='btn btn-sm btn-default' onClick={this.stop.bind(this)}><span className='glyphicon glyphicon-stop'></span></button>
-              </div>
-
+          <div className='row'>
+            <div className='col-md-12'>
               <div id='progBar'className='progress'>
                 <div className='progress-bar progress-bar-striped active'
                   role='progressbar' style={{width: (this.state.progress*100)+'%'}}>
                 </div>
-                <div id='dispCurTime'>
-                  {Math.floor((this.state.duration*this.state.progress)/60)+':'+('00'+(Math.floor(((this.state.duration*this.state.progress)-Math.floor((this.state.duration*this.state.progress)/60)*60)))).slice(-2)}
-                </div>
               </div>
             </div>
-
-            <div className='col-xs-1'>
-              <div id='dispDuration'>
-              { Math.floor(this.state.duration/60)+':'+(this.state.duration-Math.floor(this.state.duration/60)*60) }
+          </div>
+          <div id='allCtrls' className='row'>
+            <div className='col-xs-9'>
+              <div className='videoCtrl'>
+                <button className='btn btn-sm btn-default' onClick={this.playPause.bind(this)}><span className={this.state.playing ? 'glyphicon glyphicon-pause' : 'glyphicon glyphicon-play'}></span></button>
+                <button className='btn btn-sm btn-default' onClick={this.stop.bind(this)}><span className='glyphicon glyphicon-stop'></span></button>
+                {'  '+Math.floor((this.state.duration*this.state.progress)/60)+':'+('00'+(Math.floor(((this.state.duration*this.state.progress)-Math.floor((this.state.duration*this.state.progress)/60)*60)))).slice(-2)}
+                { ' / '+Math.floor(this.state.duration/60)+':'+(this.state.duration-Math.floor(this.state.duration/60)*60) }
               </div>
             </div>
 

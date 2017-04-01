@@ -31,8 +31,7 @@ body {
   float: left;
 }
 #progBar {
-  margin-left: 20%;
-  width: 350px;
+  width: 100%;
 }
 /*VOLUME LOGIC*/
 #muteBtn {
