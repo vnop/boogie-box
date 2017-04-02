@@ -259,15 +259,6 @@ class Chat extends React.Component {
     apiHelper.getChat(getChatCallback.bind(this));
   }
 
-<<<<<<< HEAD
-//   componentWillUpdate() {
-//     console.log('in componentWillUpdate')
-//   var node = this.refs.scrollbar;
-//   console.log(this.refs)
-//   let hScrollBarHeight = (node.scrollWidth !== node.clientWidth) ? 20 : 0;
-//   this.shouldScrollBottom = ((node.scrollTop + node.clientHeight + hScrollBarHeight) >= node.scrollHeight)
-//   }
-=======
 
   // toggles the typing status to display ellipses in the chat
   toggleTyping() {
@@ -280,15 +271,15 @@ class Chat extends React.Component {
     var node = ReactDOM.findDOMNode(this.messagesEnd);
     node.scrollIntoView({block: "end", behavior: "smooth"});
   }
->>>>>>> add animation to typing indicator
 
-//   componentDidUpdate() {
-//   console.log('in componentDidUpdate')
-//   if (this.shouldScrollBottom) {
-//     var node = this.refs.scrollbar;
-//     node.scrollTop = node.scrollHeight;
-//   }
-// }
+  componentDidMount() {
+    this.scrollToBottom();
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
 
   render() {
     console.log(this.state.typingUsers)
