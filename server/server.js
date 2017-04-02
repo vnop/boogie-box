@@ -71,13 +71,15 @@ io.on('connection', function (socket) {
     socket.broadcast.emit('new message', data);
   });
 
+  //when a user is typing
   socket.on('typing', function(data) {
-    console.log('71 in server.js', data)
+    // we tell the other clients who is typing
     socket.broadcast.emit('typing', data);
   });
 
+  //when the input field is empty and a previously typing client is assumed to have stopped typing
   socket.on('end typing', function(data) {
-    console.log('typing event stopped.');
+    // we stop telling other clients this client is typing
     socket.broadcast.emit('end typing', data)
   })
 });
