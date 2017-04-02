@@ -152,7 +152,7 @@ app.use(session({
 
 // Store and retrieve username
 app.get('/api/user', function(req, res) {
-  req.session.user && res.send(req.session.user) || res.send('No username stored');
+  req.session.user && res.send(req.session.user) || res.status(404).send('No username stored');
 });
 
 app.post('/api/user', function(req, res, next) {
@@ -162,7 +162,7 @@ app.post('/api/user', function(req, res, next) {
 
 // Store and retrieve vote data
 app.get('/api/votes', function(req, res) {
-  req.session.votes && res.send(req.session.votes) || res.send('No votes stored');
+  req.session.votes && res.send(req.session.votes) || res.status(404).send('No votes stored');
 });
 
 app.post('/api/votes', function(req, res, next) {

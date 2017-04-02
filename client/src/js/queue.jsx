@@ -101,7 +101,6 @@ class QueueElement extends React.Component {
   componentDidMount() {
     var self = this;
     apiHelper.getVotes(function(err, votes) {
-      console.log('this is', this);
       if (err) {
         console.error('Error getting votes:', err);
       } else {
