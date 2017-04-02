@@ -3,12 +3,12 @@
 class ChatInput extends React.Component {
   constructor(props) {
     super(props);
+    console.log(props)
     this.state = {
       prevName: this.props.name,
       name: this.props.name,
       messages: this.props.messages,
-      typing: false,
-      lastTypingTime: null
+      typing: false
     }
 
     // Messages will render on load
@@ -30,23 +30,13 @@ class ChatInput extends React.Component {
       }.bind(this));
     }.bind(this));
 
+  }
 
-    this.props.socket.on('typing', function(data) {
-      console.log('-----------typing')
-      this.setState({
-        typing: true
-      })
-    }.bind(this));
-
-
-    this.props.socket.on('end typing', function() {
-      console.log(this.state.name + 'stopped typing');
-
-      this.setState({
-        typing: false
-      })
-    }.bind(this));
-
+  timeoutFunction() {
+    this.setState({
+      typing: false
+    })
+    this.endTyping();
   }
 
   // Handles all info when the user submits a chat.
@@ -87,32 +77,32 @@ class ChatInput extends React.Component {
     this.setState({ messages: this.state.messages });
 
     this.props.updateChat();
+    this.endTyping();
+  }
+
+  checkInput(event) {
+    console.log(event.target.value)
+    if (this.refs.messageInput.value) {
+        this.chatTyping();
+    } else {
+      this.endTyping();
+    }
   }
 
   chatTyping(event) {
-    event.preventDefault();
-    var that = this;
-    if (!this.state.typing) {
-
-      this.state.typing = !this.state.typing,
-      this.state.lastTypingTime = (new Date()).getTime();
-
-      var lastTimeTyping = this.state.lastTypingTime;
-      console.log('this.state.typing', this.state.typing + 'lastTimeTyping: ', lastTimeTyping);
-      this.props.socket.emit('typing')
+    console.log('inside chatTyping, this.state.typing: ', this.state.typing)
+    var typingNote = {
+      user: this.state.name
     }
-    setTimeout(function() {
-      var typingTimer = (new Date()).getTime();
-      var timeDiff = typingTimer - lastTimeTyping;
-      console.log('this.state.typing in setTimeout:  ', that.state.typing)
-      if (timeDiff >= 2000 && that.state.typing) {
-        that.props.socket.emit('end typing')
-        }
+      this.props.socket.emit('typing', typingNote)
+  }
 
-        that.setState({
-          typing: false
-        })
-      }, 2000)
+  endTyping(event) {
+    console.log('endTyping called')
+    var endTypingNote = {
+      user: this.state.name
+    }
+    this.props.socket.emit('end typing', endTypingNote)
   }
 
   // This just keeps track of what nickname the user
@@ -121,7 +111,6 @@ class ChatInput extends React.Component {
     this.setState({
       name: this.refs.nameInput.value
     });
-    this.props.socket.emit('typing', {});
   }
 
   componentDidMount() {
@@ -141,9 +130,9 @@ class ChatInput extends React.Component {
 
   render() {
     return (
-      <form id='allChatInputs' onChange={this.chatTyping.bind(this)} onSubmit={this.chatSubmit.bind(this)}>
+      <form id='allChatInputs' onSubmit={this.chatSubmit.bind(this)}>
         <input id='userIdBox' type='text' ref='nameInput' value={this.state.name} onChange={this.changeName.bind(this)}></input>
-        <input id='chatInputBox' type='text' ref='messageInput'></input>
+        <input id='chatInputBox' type='text' ref='messageInput' onChange={this.checkInput.bind(this)}></input>
         <button id='chatSubmitBtn' className='btn btn-sm btn-default' type='submit'>Send</button>
       </form>
     );
@@ -168,16 +157,78 @@ class ChatMessage extends React.Component {
 };
 
 // React component for rendering the actual chat box to the page
+
+// class TypingIndicator extends React.Component {
+//   constructor(props) {
+//     super(props);
+
+//     this.state = {
+//       userActive: false
+//     }
+//   }
+
+//   WatchUserTyping(event) {
+//     if (event.target.value !== '') {
+//       var typing = true;
+//     } else {
+//       var typing = false;
+//     }
+//     this.setState({
+//       userActive: typing
+//     })
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         <input onChange=
+//         {this.WatchUserTyping.bind(this)}/>
+//       </div>
+//       )
+//   }
+// }
+
 class Chat extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       messages: [],
-      anonName: this.genAnonName()
+      anonName: this.genAnonName(),
+      userActive: false,
+      typingUsers: {}
     }
 
 
+    this.props.socket.on('typing', function(data) {
+      console.log(this.state.typingUsers);
+      this.state.typingUsers[data.user] = !this.state.typingUsers[data.user] ? this.state.typingUsers[data.user] : this.state.typingUsers[data.user]++;
+      this.setState({
+        userActive: true,
+        typingUsers: this.state.typingUsers
+      })
+      console.log(this.state.typingUsers)
+    }.bind(this))
+
+
+    this.props.socket.on('end typing', function(data) {
+      console.log('from within end typing listener')
+      for (var key in this.state.typingUsers) {
+        if (key === data.user) {
+          delete this.state.typingUsers[key];
+        }
+      }
+      this.setState({
+        typingUsers: this.state.typingUsers
+      }, function() {
+        if (!Object.keys(this.state.typingUsers).length) {
+          this.setState({
+            userActive: false
+          })
+        }
+      console.log(this.state.typingUsers)
+      })
+    }.bind(this));
 
   }
 
@@ -208,6 +259,7 @@ class Chat extends React.Component {
     apiHelper.getChat(getChatCallback.bind(this));
   }
 
+<<<<<<< HEAD
 //   componentWillUpdate() {
 //     console.log('in componentWillUpdate')
 //   var node = this.refs.scrollbar;
@@ -215,6 +267,20 @@ class Chat extends React.Component {
 //   let hScrollBarHeight = (node.scrollWidth !== node.clientWidth) ? 20 : 0;
 //   this.shouldScrollBottom = ((node.scrollTop + node.clientHeight + hScrollBarHeight) >= node.scrollHeight)
 //   }
+=======
+
+  // toggles the typing status to display ellipses in the chat
+  toggleTyping() {
+    this.setState({
+      userActive: !this.state.userActive
+    })
+  }
+
+  scrollToBottom() {
+    var node = ReactDOM.findDOMNode(this.messagesEnd);
+    node.scrollIntoView({block: "end", behavior: "smooth"});
+  }
+>>>>>>> add animation to typing indicator
 
 //   componentDidUpdate() {
 //   console.log('in componentDidUpdate')
@@ -224,23 +290,15 @@ class Chat extends React.Component {
 //   }
 // }
 
-
   render() {
-    var typingMessage = `${this.state.name} is typing`;
+    console.log(this.state.typingUsers)
+    var thoseTyping = (Object.keys(this.state.typingUsers).join(', ').trim().replace(/^,/, ''))
+    var typingIndicator = `${thoseTyping} . . .`;
     var chats = [];
-    var typingNote = [];
+
     _.each(this.state.messages, function(message) {
       chats.push(<ChatMessage message={message} key={message.id}/>);
     })
-
-
-    if (this.state.typing) {
-      typingNote.concat([typingMessage])
-    } else {
-      typingNote = [];
-    }
-    // var e = chats[chats.length - 1]
-    // e.scrollElement();
     return (
       <div className="chatBox">
         <div id='chatPanel' className='panel panel-info'>
@@ -249,7 +307,9 @@ class Chat extends React.Component {
             <div id='textBody'>{chats}
               <div style = {{float: "left", clear: "both"}} ref={(el) => { this.messagesEnd = el; }}>
               </div>
-              <div id='notifyTyping'>{typingNote}</div>
+              <div id='typing-indicator' className={(this.state.userActive ? 'typing-indicator show' : 'hidden')}>
+                <i className="fa fa-comments" aria-hidden="true"></i>
+                {typingIndicator}</div>
               <div id='isTyping' className='typing-notification'>
               </div>
             </div>
