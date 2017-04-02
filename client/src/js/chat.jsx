@@ -156,37 +156,6 @@ class ChatMessage extends React.Component {
 
 };
 
-// React component for rendering the actual chat box to the page
-
-// class TypingIndicator extends React.Component {
-//   constructor(props) {
-//     super(props);
-
-//     this.state = {
-//       userActive: false
-//     }
-//   }
-
-//   WatchUserTyping(event) {
-//     if (event.target.value !== '') {
-//       var typing = true;
-//     } else {
-//       var typing = false;
-//     }
-//     this.setState({
-//       userActive: typing
-//     })
-//   }
-
-//   render() {
-//     return (
-//       <div>
-//         <input onChange=
-//         {this.WatchUserTyping.bind(this)}/>
-//       </div>
-//       )
-//   }
-// }
 
 class Chat extends React.Component {
   constructor(props) {
