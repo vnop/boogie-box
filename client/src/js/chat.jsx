@@ -53,8 +53,7 @@ class ChatInput extends React.Component {
     this.props.socket.emit('new message', newMessage);
     newMessage.id=this.state.messages.length;
 
-    apiHelper.postChat(newMessage, function() {
-    };
+    apiHelper.postChat(newMessage);
 
     this.state.messages.push(newMessage);
     this.setState({ messages: this.state.messages });
