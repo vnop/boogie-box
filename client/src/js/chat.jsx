@@ -224,12 +224,12 @@ class Chat extends React.Component {
   }
 
   componentDidMount() {
-    this.scrollToBottom();
+    // this.scrollToBottom();
   }
 
   // when the chat updates, scroll to the bottom to display the most recent chat
   componentDidUpdate() {
-    this.scrollToBottom();
+    // this.scrollToBottom();
   }
 
 
