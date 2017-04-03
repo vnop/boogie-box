@@ -22,6 +22,7 @@ class ChatInput extends React.Component {
         text: data.text,
         id: this.state.messages.length
       };
+      this.props.updateChat();
     }.bind(this));
   }
   // Handles all info when the user submits a chat.
@@ -51,14 +52,12 @@ class ChatInput extends React.Component {
     };
     this.props.socket.emit('new message', newMessage);
     newMessage.id=this.state.messages.length;
-    // I can't tell if either of these is actually doing anything
-    // First line was always here. I added the second one
+
     apiHelper.postChat(newMessage, function() {
       this.props.updateChat();
-    }.bind(this));
+    });
 
     this.state.messages.push(newMessage);
-    this.setState({ messages: this.state.messages });
     this.props.updateChat();
     this.endTyping();
   }
