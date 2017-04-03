@@ -188,11 +188,11 @@ class Chat extends React.Component {
     node.scrollIntoView({block: "end", behavior: "smooth"});
   }
   componentDidMount() {
-    this.scrollToBottom();
+    // this.scrollToBottom();
   }
   // when the chat updates, scroll to the bottom to display the most recent chat
   componentDidUpdate() {
-    this.scrollToBottom();
+    // this.scrollToBottom();
   }
   render() {
     console.log(this.state.typingUsers)
