@@ -144,7 +144,7 @@ var session = require('client-sessions');
 
 app.use(session({
   cookieName: 'session',
-  secret: 'secreteCodeHere',
+  secret: 'secretCodeHere',
   duration: 30 * 60 * 1000,
   activeDuration: 5 * 60 * 1000,
 }));
