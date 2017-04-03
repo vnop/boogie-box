@@ -72,8 +72,8 @@ module.exports = function(grunt) {
           'shell:compile'
         ]
       }, css: {
-        files: 'client/*.css',
-        tasks: ['cssmin']
+        // files: 'client/*.css',
+        // tasks: ['cssmin']
       }
     },
 
