@@ -3,11 +3,11 @@ var socket = require('socket.io');
 var ChatData = require('./db').ChatData;
 
 //setting port on server side
-var port = process.env.PORT || config.port;
+var port = process.env.PORT || 3000;
 
 //starting server
-var server = app.listen(s3.port, function () {
-  console.log('We got the boogie on port', s3.port);
+var server = app.listen(port, function () {
+  console.log('We got the boogie on port', port);
 });
 
 //starting socket on server instance
