@@ -32,13 +32,6 @@ class ChatInput extends React.Component {
 
   }
 
-  timeoutFunction() {
-    this.setState({
-      typing: false
-    })
-    this.endTyping();
-  }
-
   // Handles all info when the user submits a chat.
   // This includes changing of names, storing your own
   // messages, etc.
@@ -82,7 +75,6 @@ class ChatInput extends React.Component {
 
   //Whenever the the chat input changes, which is to say whenever a user adds or removes a character from the message input, this checks to see if the string is empty or not. If it is, any typing notification is removed. Conversely, if the user is typing, the typing notification is displayed to other users.
   checkInput(event) {
-    console.log(event.target.value)
     if (this.refs.messageInput.value) {
         this.chatTyping();
     } else {
@@ -92,7 +84,6 @@ class ChatInput extends React.Component {
 
   //If user is typing, this sends the username to the typing event listener in the server to display to other users a typing indicator.
   chatTyping(event) {
-    console.log('inside chatTyping, this.state.typing: ', this.state.typing)
     var typingNote = {
       user: this.state.name
     }
@@ -101,7 +92,6 @@ class ChatInput extends React.Component {
 
   //Tells server that the user is done typing by packing grabbing the name of the state object and sending it to the 'end typing' event listener in the server.
   endTyping(event) {
-    console.log('endTyping called')
     var endTypingNote = {
       user: this.state.name
     }
@@ -173,18 +163,15 @@ class Chat extends React.Component {
 
 
     this.props.socket.on('typing', function(data) {
-      console.log(this.state.typingUsers);
       this.state.typingUsers[data.user] = !this.state.typingUsers[data.user] ? this.state.typingUsers[data.user] : this.state.typingUsers[data.user]++;
       this.setState({
         userActive: true,
         typingUsers: this.state.typingUsers
       })
-      console.log(this.state.typingUsers)
     }.bind(this))
 
 
     this.props.socket.on('end typing', function(data) {
-      console.log('from within end typing listener')
       for (var key in this.state.typingUsers) {
         if (key === data.user) {
           delete this.state.typingUsers[key];
@@ -198,7 +185,6 @@ class Chat extends React.Component {
             userActive: false
           })
         }
-      console.log(this.state.typingUsers)
       })
     }.bind(this));
 
