@@ -66,7 +66,7 @@ class ChatInput extends React.Component {
 
     // I can't tell if either of these is actually doing anything
     // First line was always here. I added the second one
-    this.state.messages.push(newMessage);
+    this.state.messages.concat(newMessage);
     this.setState({ messages: this.state.messages });
 
     this.props.updateChat();

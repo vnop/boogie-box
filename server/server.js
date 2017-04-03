@@ -4,7 +4,7 @@ var socket = require('socket.io');
 var ChatData = require('./db').ChatData;
 
 //setting port on server side
-var port = config.port;
+var port = process.env.PORT || config.port;
 
 //starting server
 var server = app.listen(port, function () {
