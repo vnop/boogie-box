@@ -177,8 +177,8 @@ class Video extends React.Component {
           video: null,
           url: null,
           progress: 0,
-          hideVid: true,
-          playing: setPlay
+          hideVid: true
+          // playing: setPlay
         });
       }
     }
