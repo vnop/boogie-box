@@ -6,7 +6,7 @@ var VideoData = require('./db').VideoData;
 var ChatData = require('./db').ChatData;
 var url = require('url');
 var request = require('request');
-var config = require('./config');   //contains port & YOUTUBE_API_KEY
+// var config = require('./config');   //contains port & YOUTUBE_API_KEY
 
 var app = express();
 
