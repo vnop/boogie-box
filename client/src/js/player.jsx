@@ -218,13 +218,8 @@ class Video extends React.Component {
           </div>
 
 
-          <div id='allCtrls' className='row'>
-            <div className='col-xs-8'>
-              <div className='videoCtrl'>
-                <button className='btn btn-sm btn-default' onClick={this.playPause.bind(this)} disabled={!this.state.video}><span className={this.state.playing ? 'glyphicon glyphicon-pause' : 'glyphicon glyphicon-play'}></span></button>
-                <button className='btn btn-sm btn-default' onClick={this.stop.bind(this)}><span className='glyphicon glyphicon-stop'></span></button>
-              </div>
-
+          <div className='row'>
+            <div className='col-md-12'>
               <div id='progBar'className='progress'>
                 <div className='progress-bar progress-bar-striped active'
                   role='progressbar' style={{width: (this.state.progress*100)+'%'}}>
