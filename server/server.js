@@ -1,5 +1,5 @@
 var app = require('./app');
-var config = require('./config');   //contains port & YOUTUBE_API_KEY
+// var config = require('./config');   //contains port & YOUTUBE_API_KEY
 var socket = require('socket.io');
 var ChatData = require('./db').ChatData;
 
