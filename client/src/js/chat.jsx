@@ -53,12 +53,11 @@ class ChatInput extends React.Component {
     this.props.socket.emit('new message', newMessage);
     newMessage.id=this.state.messages.length;
 
-    apiHelper.postChat(newMessage, function() {
-      this.state.messages.push(newMessage);
-      this.setState({ messages: this.state.messages });
-      this.props.updateChat();
-      this.endTyping();
-    }.bind(this));
+    apiHelper.postChat(newMessage);
+    this.state.messages.push(newMessage);
+    this.setState({ messages: this.state.messages });
+    this.props.updateChat();
+    this.endTyping();
   }
   //Whenever the the chat input changes, which is to say whenever a user adds or removes a character from the message input, this checks to see if the string is empty or not. If it is, any typing notification is removed. Conversely, if the user is typing, the typing notification is displayed to other users.
   checkInput(event) {
