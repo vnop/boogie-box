@@ -1,5 +1,4 @@
 var app = require('./app');
-// var config = require('./config');   //contains port & YOUTUBE_API_KEY
 var socket = require('socket.io');
 var ChatData = require('./db').ChatData;
 
@@ -7,8 +6,8 @@ var ChatData = require('./db').ChatData;
 var port = process.env.PORT || config.port;
 
 //starting server
-var server = app.listen(port, function () {
-  console.log('We got the boogie on port', port);
+var server = app.listen(s3.port, function () {
+  console.log('We got the boogie on port', s3.port);
 });
 
 //starting socket on server instance
