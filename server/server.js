@@ -70,6 +70,18 @@ io.on('connection', function (socket) {
     // we tell the client to execute 'new message'
     socket.broadcast.emit('new message', data);
   });
+
+  //when a user is typing
+  socket.on('typing', function(data) {
+    // we tell the other clients who is typing
+    socket.broadcast.emit('typing', data);
+  });
+
+  //when the input field is empty and a previously typing client is assumed to have stopped typing
+  socket.on('end typing', function(data) {
+    // we stop telling other clients this client is typing
+    socket.broadcast.emit('end typing', data)
+  })
 });
 
 
