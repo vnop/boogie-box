@@ -6,7 +6,8 @@ var VideoData = require('./db').VideoData;
 var ChatData = require('./db').ChatData;
 var url = require('url');
 var request = require('request');
-var config = require('./config');   //contains port & YOUTUBE_API_KEY
+var youtubeKey = process.env.YOUTUBE_API_KEY || require('./config').YOUTUBE_API_KEY;
+var secret = process.env.SECRET || require('./config').SECRET;
 
 var app = express();
 
@@ -31,7 +32,7 @@ app.post('/api/url', function(req, res, next) {
   //i.e https://www.youtube.com/watch?v=8boneOGMa00
   if (queryData && queryData.v) {
     //get the title by making a request to the youtube api
-    request('https://www.googleapis.com/youtube/v3/videos?id=' + queryData.v + '&key=' + config.YOUTUBE_API_KEY + '&fields=items(id,snippet(title))&part=snippet', function (err, response, body) {
+    request('https://www.googleapis.com/youtube/v3/videos?id=' + queryData.v + '&key=' + youtubeKey + '&fields=items(id,snippet(title))&part=snippet', function (err, response, body) {
       if (err) {
         throw err;
       }
@@ -145,7 +146,7 @@ var session = require('client-sessions');
 
 app.use(session({
   cookieName: 'session',
-  secret: 'secreteCodeHere',
+  secret: secret,
   duration: 30 * 60 * 1000,
   activeDuration: 5 * 60 * 1000,
 }));

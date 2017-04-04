@@ -159,6 +159,7 @@ var postChat = function(message, cb = defaultCallback) {
   });
 };
 
+// Checks to see if a user has been stored in session and returns username if it exists
 var getUserFromSession = function(cb = defaultCallback) {
   $.ajax({
     method: 'GET',
@@ -172,7 +173,7 @@ var getUserFromSession = function(cb = defaultCallback) {
   });
 };
 
-// Creating user request
+// Checks the current session and adds or replaces the user info
 var postUserToSession = function(user, cb = defaultCallback) {
 
   var user = { name: user };
