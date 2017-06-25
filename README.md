@@ -6,7 +6,7 @@
 
   - __Product Owner__: Seán Michael Ellison-Chen
   - __Scrum Master__: Alex David Moores
-  - __Development Team Members AKA Dream-Makers__: Mohammad Farooqi, Faiz Mohammed
+  - __Development Team Members__: Mohammad Farooqi, Faiz Mohammed, Max Berger, Vandeth Nop, Alex Rosenthal
 
 ## Table of Contents
 
